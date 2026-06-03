@@ -1,1 +1,65 @@
 @import "tailwindcss";
+
+/* ============================================================================
+   COLOR PALETTE - CubeGrab Design System
+   Extracted from UI mockups (mobile app screens, auth flows, dashboards)
+   ============================================================================ */
+
+:root {
+  /* PRIMARY BRAND COLORS */
+  --color-accent-gold: #c9a961;            /* Primary brand accent - buttons, links, badges, icons */
+  --color-accent-gold-dark: #b39050;       /* Darker gold - hover/active states on buttons */
+  --color-accent-gold-light: #d4a574;      /* Lighter gold - disabled states, secondary actions */
+
+  /* BACKGROUND COLORS */
+  --color-bg-primary: #0f1419;             /* Main app background - base dark navy */
+  --color-bg-secondary: #1a1f2e;           /* Cards, containers, modal backgrounds */
+  --color-card-bg: #16213e;                /* Card backgrounds with subtle depth */
+  --color-card-bg-dark: #0f1a2a;           /* Darker cards for nested/layered content */
+  --color-input-bg: #1a1f2e;               /* Form input field backgrounds */
+  --color-input-border: #2d3748;           /* Input field borders and interactive elements */
+
+  /* TEXT COLORS */
+  --color-text-primary: #ffffff;           /* Primary text - headings, main content */
+  --color-text-secondary: #a0a0a0;         /* Secondary text - descriptions, metadata */
+  --color-text-tertiary: #6b7280;          /* Tertiary text - helper text, placeholders */
+  --color-text-muted: #4b5563;             /* Very muted text - disabled states, hints */
+  --color-text-accent: #c9a961;            /* Accent text - active links, highlighted text */
+
+  /* GRADIENT & OVERLAY COLORS */
+  --color-gradient-purple: #8b5cf6;        /* Purple gradient overlays on property images */
+  --color-gradient-pink: #ec4899;          /* Pink/magenta gradient - sunset backgrounds */
+  --color-gradient-magenta: #d946ef;       /* Magenta for accent gradients */
+  --color-gradient-sunset-orange: #f97316; /* Warm orange for sunset gradient effects */
+  --color-gradient-amber: #fb923c;         /* Amber for warm tones and highlights */
+
+  /* BORDER & DIVIDER COLORS */
+  --color-border-light: #2d3748;           /* Primary borders - subtle dividers */
+  --color-border-subtle: #1f2937;          /* Subtle borders - very light separation */
+  --color-separator: #374151;              /* Separator lines and dividers */
+
+  /* STATUS & SEMANTIC COLORS */
+  --color-success: #10b981;                /* Success/verified states - green checkmarks */
+  --color-warning: #f59e0b;                /* Warning/pending states - amber badges */
+  --color-error: #ef4444;                  /* Error/rejected states - red alerts */
+  --color-info: #3b82f6;                   /* Info badges and indicators - blue */
+
+  /* SHADOW COLORS */
+  --color-shadow-primary: rgba(0, 0, 0, 0.3);   /* Default shadows on cards/modals */
+  --color-shadow-dark: rgba(0, 0, 0, 0.5);     /* Dark shadows for depth */
+  --color-shadow-light: rgba(0, 0, 0, 0.1);    /* Light shadows for subtle separation */
+
+  /* OVERLAY & BACKDROP COLORS */
+  --color-overlay-dark: rgba(15, 20, 25, 0.8); /* Dark overlay for modals/backdrops */
+  --color-overlay-light: rgba(0, 0, 0, 0.4);   /* Light overlay for transparency */
+
+  /* COMPONENT SPECIFIC COLORS */
+  --color-rating-bg: #c9a961;              /* Rating badge background - gold */
+  --color-rating-text: #0f1419;            /* Rating badge text - dark text on gold */
+
+  /* ICON COLORS */
+  --color-icon-primary: #ffffff;           /* Primary icons - white on dark backgrounds */
+  --color-icon-secondary: #a0a0a0;         /* Secondary/disabled icons - gray */
+  --color-icon-accent: #c9a961;            /* Accent icons - gold highlights */
+}
+
