@@ -21,3 +21,4 @@
 
 ## 3. Database Extensions
 - **PostGIS:** Must be enabled in PostgreSQL via Supabase for geospatial radius queries (e.g., searching properties near a user's location).
+
