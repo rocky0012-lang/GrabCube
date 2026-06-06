@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Button } from "@/components/untitled-ui/base/buttons/button";
+import { Button } from "@/components/base/buttons/button";
  import { useEffect, useState } from "react";
 import { Moon01, Sun } from "@untitledui/icons";
 
