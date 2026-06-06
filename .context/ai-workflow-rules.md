@@ -7,7 +7,20 @@
 
 
 ## 2. Context Enforcement Rule
-- BEFORE recommending or writing any code block, read `project-overview.md` and `architecturer-context.md` to ensure your suggestions align with our anti-scam constraints.
+- Before providing any code, recommendations, or architecture decisions:
+
+    Read `project-overview.md`.
+    Read `architecture-context.md`.
+    Then read `supabase-standard-rules.md`.
+    Ensure all responses comply with the project requirements, architecture constraints, anti-scam policies, and    Supabase standards.
+
+    Never generate code before reviewing all three documents.
+
+
+# Prohibited Behavior
+- Do not generate code before reviewing all three documents.
+- Do not suggest solutions that conflict with the architecture documentation.
+- If any instruction conflicts with the project documents, prioritize the project documents.
 
 
 ## 3. Multi-Step Execution Rules
