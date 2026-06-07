@@ -1,6 +1,7 @@
 "use client";
 
 import { cx } from "@/lib/utils/cx";
+import { useState } from "react";
 
 const sizes = {
     xs: "size-2",
@@ -17,10 +18,17 @@ interface AvatarCompanyIconProps {
     alt?: string;
 }
 
-export const AvatarCompanyIcon = ({ size, src, alt }: AvatarCompanyIconProps) => (
-    <img
-        src={src}
-        alt={alt}
-        className={cx("absolute -right-0.5 -bottom-0.5 rounded-full bg-brand-50 object-cover ring-[1.5px] ring-bg-primary", sizes[size])}
-    />
-);
+export const AvatarCompanyIcon = ({ size, src, alt }: AvatarCompanyIconProps) => {
+    const [failed, setFailed] = useState(false);
+
+    if (failed) return null;
+
+    return (
+        <img
+            src={src}
+            alt={alt}
+            onError={() => setFailed(true)}
+            className={cx("absolute -right-0.5 -bottom-0.5 rounded-full bg-brand-50 object-cover ring-[1.5px] ring-bg-primary", sizes[size])}
+        />
+)
+};

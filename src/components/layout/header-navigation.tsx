@@ -12,12 +12,11 @@ export default function HeaderNavigation() {
       <nav className="flex items-center gap-12">
         <ProductsDropdown />
         <ServicesDropdown />
-        <a href="/pricing">Pricing</a>
-        <a href="/resources">Resources</a>
-        <a href="/about">About</a>
+        <Link href="/pricing">Pricing</Link>
+        <Link href="/resources">Resources</Link>
+        <Link href="/about">About</Link>
       </nav>
-      <Link href="/sign-in">
-        <Button
+        <Button href="/sign-in"
           className="
             bg-[var(--color-accent-gold)]
             text-white
@@ -29,7 +28,6 @@ export default function HeaderNavigation() {
           ">
           Get Started
         </Button>
-      </Link>
     </header>
   );
 }

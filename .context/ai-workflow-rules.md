@@ -17,7 +17,7 @@
     Never generate code before reviewing all three documents.
 
 
-# Prohibited Behavior
+## Prohibited Behavior
 - Do not generate code before reviewing all three documents.
 - Do not suggest solutions that conflict with the architecture documentation.
 - If any instruction conflicts with the project documents, prioritize the project documents.

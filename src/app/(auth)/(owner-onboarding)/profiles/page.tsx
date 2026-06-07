@@ -5,8 +5,6 @@ import  LogoutButton  from '@/components/reusable/logoutbutton'
 export default async function ProfilesPage() {
   const supabase = await createClient()
   
-  // This query runs securely on your server
-  const { data: users } = await supabase.from('users').select('*')
 
   return (
     <main className="flex justify-between p-6">
