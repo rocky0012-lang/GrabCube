@@ -4,15 +4,22 @@
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
+import { error } from 'console'
 
 export default function LogoutButton() {
   const supabase = createClient()
   const router = useRouter()
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/sign-in') // Redirect to sign-in page after logout
-    router.refresh() // Refreshes the server state
+    try {
+      await supabase.auth.signOut()
+      router.push('/sign-in') // Redirect to sign-in page after logout
+      router.refresh() // Refreshes the server state
+    } catch (err) {
+      console.error('Logout failed:', err)
+
+      setError("Failed to logout. Please try again.") // Optionally, you can show an error message to the user here
+    }
   }
 
   return (

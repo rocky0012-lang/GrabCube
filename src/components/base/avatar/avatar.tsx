@@ -1,10 +1,11 @@
 "use client";
 
-import { type FC, type ReactNode, useState } from "react";
+import { type FC, type ReactNode, useState, useEffect } from "react";
 import { User01 } from "@untitledui/icons";
 import { cx } from "@/lib/utils/cx";
 import { AvatarOnlineIndicator, VerifiedTick } from "./base-components";
 import { AvatarCount } from "./base-components/avatar-count";
+
 
 export interface AvatarProps {
     size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
@@ -95,6 +96,10 @@ export const Avatar = ({
     contentClassName,
 }: AvatarProps) => {
     const [isFailed, setIsFailed] = useState(false);
+
+    useEffect(() => {
+        setIsFailed(false);
+    }, [src]);
 
     const canShowImage = src && !isFailed;
 

@@ -4,69 +4,59 @@ import { ChevronDown } from "lucide-react";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Button } from "../base/buttons/button";
 
-export function ProductsDropdown() {
+
+type MenuItem = {
+  label: string;
+  href: string;
+}
+
+type NavigationDropdownProps ={
+  label: string;
+  items: MenuItem[];
+}
+
+function NavigationDropdown({ label, items }: NavigationDropdownProps) {
   return (
     <Dropdown.Root>
             <Button className="font-medium">
               <span className="inline-flex items-center gap-2">
-                Products
+                {label}
                 <ChevronDown className="h-4 w-4" />
               </span>
             </Button>
-
-
             <Dropdown.Popover>
               <Dropdown.Menu>
-                <Dropdown.Item href="/products/analytics">
-                  Analytics
-                </Dropdown.Item>
-
-                <Dropdown.Item href="/products/automation">
-                  Automation
-                </Dropdown.Item>
-
-                <Dropdown.Item href="/products/reports">
-                  Reports
-                </Dropdown.Item>
-
-                <Dropdown.Item href="/products/integrations">
-                  Integrations
-                </Dropdown.Item>
+                {items.map((item) => (
+                  <Dropdown.Item key={item.href} href={item.href}>
+                    {item.label}
+                  </Dropdown.Item>
+                ))}
               </Dropdown.Menu>
             </Dropdown.Popover>
     </Dropdown.Root>
   );
 }
 
-export function ServicesDropdown() {
-  return (
-    <Dropdown.Root>
-      <Button className="font-medium">
-        <span className="inline-flex items-center gap-2">
-          Services
-          <ChevronDown className="h-4 w-4" />
-        </span>
-      </Button>
 
-      <Dropdown.Popover>
-        <Dropdown.Menu>
-          <Dropdown.Item href="/services/web-development">
-            Web Development
-          </Dropdown.Item>
+const productItems = [
+  {label: "Analytics", href: "/products/analytics"},
+  {label: "Automation", href: "/products/automation"},
+  {label: "Reports", href: "/products/reports"},
+  {label: "Integrations", href: "/products/integrations"},
+];
+const servicesItems = [
+  {label: "Web Development", href: "/services/web-development"},
+  {label: "UI/UX Design", href: "/services/ui-ux-design"},
+  {label: "Consulting", href: "/services/consulting"},
+  {label: "Support", href: "/services/support"},
+];
 
-          <Dropdown.Item href="/services/ui-ux-design">
-            UI/UX Design
-          </Dropdown.Item>
-
-          <Dropdown.Item href="/services/consulting">
-            Consulting
-          </Dropdown.Item>
-
-          <Dropdown.Item href="/services/support">
-            Support
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown.Popover>
-    </Dropdown.Root>
-  );
+export function ProductsDropdown() {
+  return <NavigationDropdown label="Products" items={productItems} />;
 }
+
+export function ServicesDropdown() {
+  return <NavigationDropdown label="Services" items={servicesItems} />;
+}
+  
+

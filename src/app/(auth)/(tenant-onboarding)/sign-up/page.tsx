@@ -1,10 +1,9 @@
+import { ModernSignupForm } from '@/components/auth/tenant-signup-form'
 import React from 'react'
 
 const TenantSignUpPage = () => {
   return (
-    <div>
-      Tenant Sign Up Page
-    </div>
+    <ModernSignupForm />
   )
 }
 
