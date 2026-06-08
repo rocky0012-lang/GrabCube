@@ -6,13 +6,9 @@ import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
 import PhoneInput from "react-phone-number-input"
-import "react-phone-number-input/style.css";
-import { isPossiblePhoneNumber } from 'react-phone-number-input'
-// Supabase client
+import "react-phone-number-input/style.css"
+
 import { createClient } from "@/lib/supabase/client"
-
-
-// Import updated Shadcn primitives
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -25,16 +21,11 @@ import {
   FieldError,
 } from "@/components/ui/field"
 
-// Validation Rules
 const signupSchema = z.object({
   firstName: z.string().min(1, "First name is required."),
   lastName: z.string().min(1, "Last name is required."),
   email: z.string().email("Please input a valid email address."),
-  phoneNumber: z.string()
-    .min(1, "Phone number is required.")
-    .refine((value) => isPossiblePhoneNumber(value || ''), {
-      message: "Please enter a valid phone number.",
-    }),
+  phoneNumber: z.string().min(10, "Please enter a valid phone number."),
   password: z.string().min(8, "Password must contain 8+ characters."),
   confirmPassword: z.string(),
   terms: z.boolean().refine((val) => val === true, {
@@ -47,14 +38,11 @@ const signupSchema = z.object({
 
 type SignupValues = z.infer<typeof signupSchema>
 
-export function TenantSignupForm() {
-    const [error, setError] = React.useState<string | null>(null)
-    const supabase = createClient()
-
-  // Password UI Toggles
+export function OwnerSignupForm() {
   const [showPassword, setShowPassword] = React.useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
-  const user_role = "tenant" // Hidden field value
+  const [formError, setFormError] = React.useState<string | null>(null)
+  const [formSuccess, setFormSuccess] = React.useState(false)
 
   const {
     register,
@@ -76,42 +64,59 @@ export function TenantSignupForm() {
     },
   })
 
-  // Watch values for custom primitives (Checkbox)
   const termsValue = watch("terms")
 
   async function onSubmit(data: SignupValues) {
-    setError(null)
+    setFormError(null)
+
+    const supabase = createClient()
     
-    const { error: signUpError } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-        data: {
-          full_name: `${data.firstName} ${data.lastName}`,
-          phone_number: data.phoneNumber,
-          user_role: user_role,
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            full_name: `${data.firstName} ${data.lastName}`,
+            phone_number: data.phoneNumber,
+            user_role: "owner",
+          },
         },
-      },
-    })
+      })
     
-    if (signUpError) {
-      setError(signUpError.message)
+    if (error) {
+      setFormError(error.message)
       return
     }
-    
-    // Handle success (e.g., show confirmation message, redirect)
-   }
+
+    setFormSuccess(true)
+  }
+
+  if (formSuccess) {
+    return (
+      <Card className="w-full max-w-xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl">Check your email</CardTitle>
+          <CardDescription>
+            We sent a confirmation link to your email address. Please verify your account to continue.
+          </CardDescription>
+        </CardHeader>
+        <Button variant="outline" onClick={() => setFormSuccess(false)}>
+          Back to Signup
+        </Button>
+      </Card>
+    )
+  }
 
   return (
     <Card className="w-full max-w-xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-2xl">Create a Tenant account</CardTitle>
+        <CardTitle className="text-2xl">Create an owner account</CardTitle>
         <CardDescription>Fill out the fields below to register</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          
+
           {/* First & Last Name row */}
           <div className="grid grid-cols-2 gap-4">
             <Field data-invalid={!!errors.firstName}>
@@ -140,27 +145,26 @@ export function TenantSignupForm() {
             <FieldError>{errors.email?.message}</FieldError>
           </Field>
 
-          {/* Combined Country Dropdown & Phone field */}
-            <Field data-invalid={!!errors.phoneNumber}>
-                <FieldLabel>Phone Number</FieldLabel>
-
-                <FieldContent>
-                  <Controller
-                    name="phoneNumber"
-                    control={control}
-                    render={({ field }) => (
-                      <PhoneInput
-                        international
-                        defaultCountry="KE"
-                        value={field.value}
-                        onChange={field.onChange}
-                        className="w-full rounded-md border px-3 py-2"
-                      />
-                    )}
+          {/* Phone field */}
+          <Field data-invalid={!!errors.phoneNumber}>
+            <FieldLabel>Phone Number</FieldLabel>
+            <FieldContent>
+              <Controller
+                name="phoneNumber"
+                control={control}
+                render={({ field }) => (
+                  <PhoneInput
+                    international
+                    defaultCountry="KE"
+                    value={field.value}
+                    onChange={field.onChange}
+                    className="w-full rounded-md border px-3 py-2"
                   />
-                </FieldContent>
-                <FieldError>{errors.phoneNumber?.message}</FieldError>
-            </Field>
+                )}
+              />
+            </FieldContent>
+            <FieldError>{errors.phoneNumber?.message}</FieldError>
+          </Field>
 
           {/* Password with Eye Icon */}
           <Field data-invalid={!!errors.password}>
@@ -205,22 +209,33 @@ export function TenantSignupForm() {
           </Field>
 
           {/* Terms checkbox */}
-          <Field data-invalid={!!errors.terms} className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+          <Field
+            data-invalid={!!errors.terms}
+            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm"
+          >
             <FieldContent>
               <Checkbox
                 id="terms"
                 checked={termsValue}
-                onCheckedChange={(checked) => setValue("terms", checked === true, { shouldValidate: true })}
+                onCheckedChange={(checked) =>
+                  setValue("terms", checked === true, { shouldValidate: true })
+                }
               />
             </FieldContent>
             <div className="space-y-1 leading-none">
-              <FieldLabel htmlFor="terms" className="cursor-pointer">Accept terms and conditions</FieldLabel>
+              <FieldLabel htmlFor="terms" className="cursor-pointer">
+                Accept terms and conditions
+              </FieldLabel>
               <FieldDescription>
                 You agree to our system Terms of Service and Privacy Policy.
               </FieldDescription>
               <FieldError>{errors.terms?.message}</FieldError>
             </div>
           </Field>
+
+          {formError && (
+            <p className="text-sm font-normal text-destructive">{formError}</p>
+          )}
 
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting ? "Registering..." : "Complete Registration"}
