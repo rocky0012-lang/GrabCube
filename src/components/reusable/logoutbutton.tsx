@@ -4,11 +4,12 @@
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
-import { error } from 'console'
+import { useState } from 'react'
 
 export default function LogoutButton() {
   const supabase = createClient()
   const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
 
   const handleLogout = async () => {
     try {
@@ -23,8 +24,11 @@ export default function LogoutButton() {
   }
 
   return (
-    <Button onClick={handleLogout} className="bg-red-500 hover:bg-red-900 text-white px-4 py-2 rounded">
-      Log Out
-    </Button>
+    <div>
+      <Button onClick={handleLogout} className="bg-red-500 hover:bg-red-900 text-white px-4 py-2 rounded">
+        Log Out
+      </Button>
+      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+    </div>
   )
 }
