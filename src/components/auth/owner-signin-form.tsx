@@ -1,3 +1,6 @@
+'use client'
+
+import * as React from "react"
 import { createClient } from '@/lib/supabase/client'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -8,71 +11,85 @@ import { useForm } from "react-hook-form"
 import {
   Field,
   FieldContent,
-  FieldDescription,
   FieldLabel,
   FieldError,
 } from "@/components/ui/field"
-import { register } from 'module'
-import { error } from 'console'
+import { redirect } from "next/navigation"
+import { CubeGrabLogo } from "../reusable/cubegrab-logo"
 
 const signinSchema = z.object({
   email: z.string().email("Please input a valid email address."),
   password: z.string().min(8, "Password must contain 8+ characters."),
 })
 
-async function onSubmit(data: SigninValues) {
-    setFormError(null)
-
-
-const supabase = createClient()
-// ---cut---
-async function signInWithEmail() {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: 'email',
-    password: 'password',
-  })
-}
-
-if (error) {
-      setFormError(error.message)
-      return
-    }
+type SigninValues = z.infer<typeof signinSchema>
 
 export function OwnerSigninForm() {
     const [formError, setFormError] = React.useState<string | null>(null)
+    const { register, 
+            handleSubmit, 
+            formState: { errors, isSubmitting },
+            } = useForm<SigninValues>({
+                resolver: zodResolver(signinSchema),
+                defaultValues: {
+                    email: "",
+                    password: "",
+                },
+            })
+
+            async function onSubmit(data: SigninValues) {
+                 setFormError(null)
+                const supabase = createClient()
+                const { error } = await supabase.auth.signInWithPassword({
+                  email: data.email,
+                  password: data.password,
+                })
+                if (error) {
+                  setFormError(error.message)
+                  return
+                }
+                redirect("/owner/dashboard") // Redirect to owner dashboard on successful sign-in
+                // Handle success (e.g., redirect)
+              }
     return (
-        <Card className="w-full max-w-xl mx-auto">
-        <CardHeader>
-          <CardTitle className="text-2xl">Welcome back</CardTitle>
-          <CardDescription>
-            Log in to manage your listing
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-
-          <div className="grid grid-cols-2 gap-4">
-            <Field data-invalid={!!errors.email}>
-            <FieldLabel>Email Address</FieldLabel>
-            <FieldContent>
-              <Input type="email" placeholder="jane.doe@example.com" {...register("email")} />
-            </FieldContent>
-            <FieldError>{errors.email?.message}</FieldError>
-          </Field>
-
-            <Field data-invalid={!!errors.password}>
-              <FieldLabel>Password</FieldLabel>
-              <FieldContent>
-                <Input type="password" placeholder="••••••••" {...register("password")} />
-              </FieldContent>
-              <FieldError>{errors.password?.message}</FieldError>
-            </Field>
+        <>
+          <div className="text-center mb-8">
+            <CubeGrabLogo />
           </div>
-            <Button type="submit" disabled={isSubmitting} className="w-full">
-                {isSubmitting ? "Signing in..." : "Sign In"}
-            </Button>
-        </form>
-        </CardContent>
-      </Card>
+          <div className="w-full max-w-xl mx-auto mb-6 px-4">
+          <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-2xl max-w-xl mx-auto">
+            Owner Sign In
+          </p>
+          <h3>Log in to your account to manage your listings, view reservations, and more.</h3>
+          </div>
+        <Card className="w-full max-w-xl mx-auto bg-[var(--color-bg-secondary-base)]/10 dark:bg-[var(--color-bg-primary-base)]/5 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl">
+          <CardContent>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+
+              <Field data-invalid={!!errors.email}>
+              <FieldLabel>Email Address</FieldLabel>
+              <FieldContent>
+                <Input type="email" placeholder="jane.doe@example.com" {...register("email")} className="h-10" />
+              </FieldContent>
+              <FieldError>{errors.email?.message}</FieldError>
+            </Field>
+
+              <Field data-invalid={!!errors.password}>
+                <FieldLabel>Password</FieldLabel>
+                <FieldContent>
+                  <Input type="password" placeholder="••••••••" {...register("password")} className="h-10" />
+                </FieldContent>
+                <FieldError>{errors.password?.message}</FieldError>
+              </Field>
+              {formError && (
+                <p className="text-sm font-normal text-destructive">{formError}</p>
+              )}
+              <Button type="submit" disabled={isSubmitting} className="w-full h-8 bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-black text-lg">
+                  {isSubmitting ? "Signing in..." : "Sign In"}
+              </Button>
+          </form>
+          </CardContent>
+        </Card>
+        </>
     )
 }
