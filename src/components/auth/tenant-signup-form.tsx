@@ -1,14 +1,14 @@
 "use client"
 
 import * as React from "react"
-import { z } from "zod"
+import { email, z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
 import PhoneInput from "react-phone-number-input"
 import "react-phone-number-input/style.css";
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
-
+import Link from "next/link"
 // Supabase client
 import { createClient } from "@/lib/supabase/client"
 
@@ -25,6 +25,7 @@ import {
   FieldDescription,
   FieldLabel,
   FieldError,
+  FieldTitle,
 } from "@/components/ui/field"
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
 
@@ -118,9 +119,11 @@ export function TenantSignupForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="outline" onClick={() => setFormSuccess(false)} redirect="/sign-in" className="w-full bg-[var(--color-accent-gold-dark)] text-white hover:bg-[var(--color-accent-gold-light)]">
-              Go to Sign in
-            </Button>
+            <Link href="/sign-in">
+              <Button variant="outline" className="w-full bg-[var(--color-accent-gold-dark)] text-white hover:bg-[var(--color-accent-gold-light)]">
+                Go to Sign in
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       )
@@ -137,7 +140,7 @@ export function TenantSignupForm() {
       </p>
       <h3>Find your perfect space</h3>
     </div>
-    <Card className="w-full max-w-xl mx-auto bg-(--color-bg-secondary-base)/10 dark:bg-[var(--color-bg-primary-base)]/5 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl">
+    <Card className="w-full max-w-xl mx-auto bg-[var(--color-bg-secondary-base)]/10 dark:bg-[var(--color-bg-primary-base)]/5 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl">
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           
@@ -234,21 +237,35 @@ export function TenantSignupForm() {
           </Field>
 
           {/* Terms checkbox */}
-          <Field data-invalid={!!errors.terms} className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
-            <FieldContent>
-              <Checkbox
-                id="terms"
-                checked={termsValue}
-                onCheckedChange={(checked) => setValue("terms", checked === true, { shouldValidate: true })}
-              />
-            </FieldContent>
-            <div className="space-y-1 leading-none">
-              <FieldLabel htmlFor="terms" className="cursor-pointer">Accept terms and conditions</FieldLabel>
-              <FieldDescription>
-                You agree to our system Terms of Service and Privacy Policy.
-              </FieldDescription>
-              <FieldError>{errors.terms?.message}</FieldError>
-            </div>
+          
+            <Field data-invalid={!!errors.terms} className="flex flex-col gap-4 items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+              <FieldLabel>
+              <FieldContent>
+                <Checkbox
+                  id="terms"
+                  checked={termsValue}
+                  onCheckedChange={(checked) => setValue("terms", checked === true, { shouldValidate: true })}
+                />
+              </FieldContent>
+              <div className="space-y-1 leading-none">
+                <FieldLabel htmlFor="terms" className="cursor-pointer">Accept terms and conditions</FieldLabel>
+                <FieldDescription>
+                  You agree to our system Terms of Service and Privacy Policy.
+                </FieldDescription>
+                <FieldError>{errors.terms?.message}</FieldError>
+              </div>
+            </FieldLabel>
+            <FieldLabel>
+              <Field orientation="horizontal">
+                <Checkbox id="toggle-checkbox-2" name="toggle-checkbox-2" />
+                <FieldContent>
+                  <FieldTitle>Enable notifications</FieldTitle>
+                  <FieldDescription>
+                    You can enable or disable notifications at any time.
+                  </FieldDescription>
+                </FieldContent>
+              </Field>
+            </FieldLabel>
           </Field>
 
           <Button type="submit" disabled={isSubmitting} className="w-full h-8 bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-black text-lg font-medium">

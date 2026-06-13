@@ -8,6 +8,7 @@ import { Eye, EyeOff } from "lucide-react"
 import PhoneInput from "react-phone-number-input"
 import "react-phone-number-input/style.css"
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
+import Link from "next/link"
 
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -20,8 +21,10 @@ import {
   FieldDescription,
   FieldLabel,
   FieldError,
+  FieldTitle,
 } from "@/components/ui/field"
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
+import { ColorField } from "react-aria-components"
 
 const signupSchema = z.object({
   firstName: z.string().min(1, "First name is required."),
@@ -85,6 +88,7 @@ export function OwnerSignupForm() {
           data: {
             full_name: `${data.firstName} ${data.lastName}`,
             phone_number: data.phoneNumber,
+            verification_status: "unverified",
             user_role: "owner",
           },
         },
@@ -110,9 +114,11 @@ export function OwnerSignupForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="outline" redirect="/owner-signin" onClick={() => setFormSuccess(false)}>
-              Back to Signup
-            </Button>
+            <Link href="/owner-signin">
+              <Button variant="outline" onClick={() => setFormSuccess(false)}>
+                Back to Signin
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       </main>
@@ -126,7 +132,7 @@ export function OwnerSignupForm() {
       </div>
       <div className="w-full max-w-xl mx-auto mb-6">
         <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-2xl max-w-xl mx-auto">
-          Create a Owner account
+          Create an Owner account
         </p>
         <h3>List your property. Connect with more</h3>
       </div>
@@ -228,8 +234,9 @@ export function OwnerSignupForm() {
             {/* Terms checkbox */}
             <Field
               data-invalid={!!errors.terms}
-              className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm"
+              className="flex flex-col gap-4 items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm"
             >
+              <FieldLabel>
               <FieldContent>
                 <Checkbox
                   id="terms"
@@ -248,6 +255,18 @@ export function OwnerSignupForm() {
                 </FieldDescription>
                 <FieldError>{errors.terms?.message}</FieldError>
               </div>
+              </FieldLabel>
+              <FieldLabel>
+              <Field orientation="horizontal">
+                <Checkbox id="toggle-checkbox-2" name="toggle-checkbox-2" />
+                <FieldContent>
+                  <FieldTitle>Enable notifications</FieldTitle>
+                  <FieldDescription>
+                    You can enable or disable notifications at any time.
+                  </FieldDescription>
+                </FieldContent>
+              </Field>
+            </FieldLabel>
             </Field>
 
             {formError && (

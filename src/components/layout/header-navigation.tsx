@@ -13,7 +13,7 @@ export default function HeaderNavigation() {
           <div>
             <Image 
               src="/images/CubeGrab.png"
-              alt="onboard-LOogo"
+              alt="onboard-Logo"
               height={78}
               width={78}
               />

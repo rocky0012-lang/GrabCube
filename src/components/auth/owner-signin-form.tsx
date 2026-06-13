@@ -14,7 +14,7 @@ import {
   FieldLabel,
   FieldError,
 } from "@/components/ui/field"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
 
 const signinSchema = z.object({
@@ -26,6 +26,7 @@ type SigninValues = z.infer<typeof signinSchema>
 
 export function OwnerSigninForm() {
     const [formError, setFormError] = React.useState<string | null>(null)
+    const router = useRouter()
     const { register, 
             handleSubmit, 
             formState: { errors, isSubmitting },
@@ -48,7 +49,7 @@ export function OwnerSigninForm() {
                   setFormError(error.message)
                   return
                 }
-                redirect("/owner/dashboard") // Redirect to owner dashboard on successful sign-in
+                router.push("/owner/dashboard") // Redirect to owner dashboard on successful sign-in
                 // Handle success (e.g., redirect)
               }
     return (
