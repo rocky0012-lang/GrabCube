@@ -1,6 +1,6 @@
 import { FooterLarge01 } from "@/components/layout/footer";
 import HeaderNavigation from "@/components/layout/header-navigation";
-import Image from "next/image";
+import { ContactSimpleForm } from "@/components/marketing/contact/contact-simple-form";
 
 export default function Home() {
   return (
@@ -51,6 +51,8 @@ export default function Home() {
           </div>
         </main>
       </div>
+    
+    <ContactSimpleForm />
     <FooterLarge01 />
     </>
   );
