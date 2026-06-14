@@ -74,9 +74,7 @@ const Group = ({ inputClassName, containerClassName, width, maxLength = 4, ...pr
             maxLength={maxLength}
             disabled={disabled}
             id={"pin-input-" + id}
-            aria-label="Enter your pin"
-            aria-labelledby={"pin-input-label-" + id}
-            aria-describedby={"pin-input-description-" + id}
+            aria-label={props["aria-label"] || "Enter your pin"}
             containerClassName={cx("flex flex-row", styles[size].group, containerClassName)}
             className={cx("disabled:cursor-not-allowed", inputClassName)}
         />

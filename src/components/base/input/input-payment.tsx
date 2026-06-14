@@ -119,7 +119,7 @@ export const PaymentInput = ({
             size={size}
             className={className}
             inputMode="numeric"
-            maxLength={maxLength}
+            maxLength={maxLength + Math.floor((maxLength - 1) / 4)}
             value={formatCardNumber(cardNumber)}
             onChange={setCardNumber}
         >

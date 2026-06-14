@@ -1264,7 +1264,7 @@ export const countries = [
         name: "United Kingdom",
         code: "GB",
         flag: "https://www.untitledui.com/images/flags/GB.svg",
-        phoneCode: "44",
+        phoneMask: "+44 (####) ######",
     },
     {
         name: "United States",

@@ -192,7 +192,9 @@ const MultiSelectRoot = ({
         setPopoverWidth(rect.width + "px");
     }, []);
 
-    const selectedCount = selectedKeys instanceof Set ? selectedKeys.size : selectedKeys === "all" ? (items?.length ?? 0) : 0;
+    const [internalSelectedKeys, setInternalSelectedKeys] = useState<Selection>(defaultSelectedKeys ?? new Set());
+    const effectiveSelectedKeys = selectedKeys ?? internalSelectedKeys;
+    const selectedCount = effectiveSelectedKeys instanceof Set ? effectiveSelectedKeys.size : effectiveSelectedKeys === "all" ? (items?.length ?? 0) : 0;
     const hasSelection = selectedCount > 0;
 
     const handleClearSearch = useCallback(() => {
@@ -287,7 +289,10 @@ const MultiSelectRoot = ({
                                     selectionMode="multiple"
                                     selectedKeys={selectedKeys}
                                     defaultSelectedKeys={defaultSelectedKeys}
-                                    onSelectionChange={onSelectionChange}
+                                    onSelectionChange={(keys) => {
+                                        if (selectedKeys === undefined) setInternalSelectedKeys(keys);
+                                        onSelectionChange?.(keys);
+                                    }}
                                     renderEmptyState={() => (
                                         <MultiSelectEmptyState
                                             title={emptyStateTitle}

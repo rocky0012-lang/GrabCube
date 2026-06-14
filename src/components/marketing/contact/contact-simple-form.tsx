@@ -26,7 +26,6 @@ export const ContactSimpleForm = () => {
                     onSubmit={(e) => {
                         e.preventDefault();
                         const data = Object.fromEntries(new FormData(e.currentTarget));
-                        console.log("Form data:", data);
                     }}
                     className="mx-auto mt-16 flex flex-col gap-8 md:mt-24 md:max-w-120"
                 >
@@ -65,7 +64,7 @@ export const ContactSimpleForm = () => {
                                 <>
                                     You agree to our friendly{" "}
                                     <a
-                                        href="#"
+                                        href="/privacy-policy"
                                         className="rounded-xs underline underline-offset-3 outline-focus-ring focus-visible:outline-2 focus-visible:outline-offset-2"
                                     >
                                         privacy policy.

@@ -28,6 +28,8 @@ import {
   FieldTitle,
 } from "@/components/ui/field"
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
+import SocialAuthButtons from "../ui/social-auth-button"
+import Separator from "../reusable/separator"
 
 // Validation Rules
 const signupSchema = z.object({
@@ -119,11 +121,11 @@ export function TenantSignupForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Link href="/sign-in">
               <Button variant="outline" className="w-full bg-[var(--color-accent-gold-dark)] text-white hover:bg-[var(--color-accent-gold-light)]">
+              <Link href="/sign-in">
                 Go to Sign in
+              </Link>
               </Button>
-            </Link>
           </CardContent>
         </Card>
       )
@@ -239,7 +241,6 @@ export function TenantSignupForm() {
           {/* Terms checkbox */}
           
             <Field data-invalid={!!errors.terms} className="flex flex-col gap-4 items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
-              <FieldLabel>
               <FieldContent>
                 <Checkbox
                   id="terms"
@@ -254,7 +255,6 @@ export function TenantSignupForm() {
                 </FieldDescription>
                 <FieldError>{errors.terms?.message}</FieldError>
               </div>
-            </FieldLabel>
             <FieldLabel>
               <Field orientation="horizontal">
                 <Checkbox id="toggle-checkbox-2" name="toggle-checkbox-2" />
@@ -272,6 +272,8 @@ export function TenantSignupForm() {
             {isSubmitting ? "Registering..." : "Complete Registration"}
           </Button>
         </form>
+        <Separator />
+        <SocialAuthButtons />
       </CardContent>
     </Card>
     </main>

@@ -99,7 +99,7 @@ export const TagSelectBase = ({
         (keys: Set<Key>) => {
             const key = keys.values().next().value;
 
-            if (!key) return;
+            if (key === null || key === undefined) return;
 
             selectedItems.remove(key);
             onItemCleared?.(key);
