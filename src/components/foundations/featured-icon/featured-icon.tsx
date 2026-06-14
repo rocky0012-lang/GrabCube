@@ -1,5 +1,5 @@
-import type { FC, ReactNode, Ref } from "react";
-import { isValidElement } from "react";
+import type { FC, ReactElement, ReactNode, Ref } from "react";
+import { cloneElement, isValidElement } from "react";
 import { cx, sortCx } from "@/lib/utils/cx";
 import { isReactComponent } from "@/lib/utils/is-react-component";
 
@@ -146,8 +146,11 @@ export const FeaturedIcon = (props: FeaturedIconProps) => {
             )}
         >
             {isReactComponent(Icon) && <Icon data-icon className="z-1" />}
-            {isValidElement(Icon) && <div className="z-1">{Icon}</div>}
-
+            {isValidElement(Icon) &&
+                cloneElement(Icon as ReactElement<{ className?: string }>, {
+                    "data-icon": true,
+                    className: cx("z-1", (Icon as ReactElement<{ className?: string }>).props.className),
+                })}
             {props.children}
         </div>
     );

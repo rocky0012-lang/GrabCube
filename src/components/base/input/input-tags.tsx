@@ -103,8 +103,8 @@ export const InputTags = ({
         const prev = prevControlledValue.current;
         if (prev === value) return controlledEntries.current;
 
-        // Reconcile: reuse existing IDs for tags that haven't changed position,
-        // assign new IDs only for genuinely new entries
+        // Reconcile: reuse existing IDs for tags with matching labels (first unused match),
+        // assign new IDs only for tags without a matching label in the old state
         const oldEntries = controlledEntries.current;
         const newEntries: TagEntry[] = [];
         const usedOldIndices = new Set<number>();

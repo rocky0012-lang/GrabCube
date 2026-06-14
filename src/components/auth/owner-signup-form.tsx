@@ -24,7 +24,8 @@ import {
   FieldTitle,
 } from "@/components/ui/field"
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
-import { ColorField } from "react-aria-components"
+import SocialAuthButtons from "../ui/social-auth-button"
+import Separator from "../reusable/separator"
 
 const signupSchema = z.object({
   firstName: z.string().min(1, "First name is required."),
@@ -114,11 +115,13 @@ export function OwnerSignupForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Link href="/owner-signin">
-              <Button variant="outline" onClick={() => setFormSuccess(false)}>
-                Back to Signin
+              <Button className="bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-white" href="/owner-signin" variant="outline" onClick={() => setFormSuccess(false)}>
+                <Link
+                  href="/sign-in"
+                >
+                  Go to Sign in
+                </Link>
               </Button>
-            </Link>
           </CardContent>
         </Card>
       </main>
@@ -277,6 +280,8 @@ export function OwnerSignupForm() {
               {isSubmitting ? "Registering..." : "Complete Registration"}
             </Button>
           </form>
+          <Separator />
+          <SocialAuthButtons />
         </CardContent>
       </Card>
     </main>

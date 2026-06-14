@@ -176,7 +176,7 @@ export const Tag = ({
                     </div>
 
                     {(onClose || allowsRemoving) && (
-                        <TagCloseX size={context.size} excludeFromTabOrder={allowsRemoving} onPress={() => id && onClose?.(id.toString())} />
+                         <TagCloseX size={context.size} excludeFromTabOrder={allowsRemoving} onPress={() => id != null && onClose?.(id.toString())} />
                     )}
                 </>
             )}

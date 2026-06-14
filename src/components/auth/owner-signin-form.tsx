@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/field"
 import { useRouter } from "next/navigation"
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
+import SocialAuthButtons from "../ui/social-auth-button"
+import Separator from "@/components/reusable/separator"
 
 const signinSchema = z.object({
   email: z.string().email("Please input a valid email address."),
@@ -89,6 +91,8 @@ export function OwnerSigninForm() {
                   {isSubmitting ? "Signing in..." : "Sign In"}
               </Button>
           </form>
+          <Separator />
+          <SocialAuthButtons />
           </CardContent>
         </Card>
         </>

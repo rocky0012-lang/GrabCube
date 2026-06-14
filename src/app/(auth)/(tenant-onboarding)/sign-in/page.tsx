@@ -1,10 +1,100 @@
+'use client'
 
+import * as React from "react"
+import { createClient } from '@/lib/supabase/client'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+  FieldError,
+} from "@/components/ui/field"
+import { useRouter } from "next/navigation"
+import { CubeGrabLogo } from "@/components/reusable/cubegrab-logo"
+import SocialAuthButtons from "@/components/ui/social-auth-button"
+import Separator from "@/components/reusable/separator"
 
-const TenantSignInPage = () => {
-  return (
-    <main className="min-h-screen flex items-center justify-center">   
-    </main>
-  )
+const signinSchema = z.object({
+  email: z.string().email("Please input a valid email address."),
+  password: z.string().min(8, "Password must contain 8+ characters."),
+})
+
+type SigninValues = z.infer<typeof signinSchema>
+
+export default function TenantSigninForm() {
+    const [formError, setFormError] = React.useState<string | null>(null)
+    const router = useRouter()
+    const { register, 
+            handleSubmit, 
+            formState: { errors, isSubmitting },
+            } = useForm<SigninValues>({
+                resolver: zodResolver(signinSchema),
+                defaultValues: {
+                    email: "",
+                    password: "",
+                },
+            })
+
+            async function onSubmit(data: SigninValues) {
+                 setFormError(null)
+                const supabase = createClient()
+                const { error } = await supabase.auth.signInWithPassword({
+                  email: data.email,
+                  password: data.password,
+                })
+                if (error) {
+                  setFormError(error.message)
+                  return
+                }
+                router.push("/tenant/complete-profile") // Redirect to tenant dashboard on successful sign-in
+                // Handle success (e.g., redirect)
+              }
+    return (
+        <>
+          <div className="text-center mb-8">
+            <CubeGrabLogo />
+          </div>
+          <div className="w-full max-w-xl mx-auto mb-6 px-4">
+          <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-2xl max-w-xl mx-auto">
+            Tenant Sign In
+          </p>
+          <h3>Log in to your account to manage your listings, view reservations, and more.</h3>
+          </div>
+        <Card className="w-full max-w-xl mx-auto bg-[var(--color-bg-secondary-base)]/10 dark:bg-[var(--color-bg-primary-base)]/5 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl">
+          <CardContent>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+
+              <Field data-invalid={!!errors.email}>
+              <FieldLabel>Email Address</FieldLabel>
+              <FieldContent>
+                <Input type="email" placeholder="jane.doe@example.com" {...register("email")} className="h-10" />
+              </FieldContent>
+              <FieldError>{errors.email?.message}</FieldError>
+            </Field>
+
+              <Field data-invalid={!!errors.password}>
+                <FieldLabel>Password</FieldLabel>
+                <FieldContent>
+                  <Input type="password" placeholder="••••••••" {...register("password")} className="h-10" />
+                </FieldContent>
+                <FieldError>{errors.password?.message}</FieldError>
+              </Field>
+              {formError && (
+                <p className="text-sm font-normal text-destructive">{formError}</p>
+              )}
+              <Button type="submit" disabled={isSubmitting} className="w-full h-8 bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-black text-lg">
+                  {isSubmitting ? "Signing in..." : "Sign In"}
+              </Button>
+          </form>
+          <Separator />
+          <SocialAuthButtons />
+          </CardContent>
+        </Card>
+        </>
+    )
 }
-
-export default TenantSignInPage

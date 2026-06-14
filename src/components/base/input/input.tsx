@@ -62,7 +62,7 @@ export const InputBase = ({
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     // Check if the input has a leading icon or tooltip
-    const hasTrailingIcon = tooltip || isInvalid;
+    const hasTrailingIcon = Boolean(tooltip || isInvalid || type === "password" || shortcut);
     const hasLeadingIcon = Icon;
 
     // If the input is inside a `TextFieldContext`, use its context to simplify applying styles
