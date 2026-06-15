@@ -1,10 +1,11 @@
-import React from 'react'
+import InsideNav from '@/components/reusable/inside-nav'
+
 
 const CompleteProfile = () => {
   return (
-    <div>
-      Complete Profile Page
-    </div>
+    <main>
+      <InsideNav />
+    </main>
   )
 }
 

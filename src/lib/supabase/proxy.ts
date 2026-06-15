@@ -39,15 +39,20 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth') &&
+    // 1. Keep the user on the landing page if they are not authenticated and are trying to access the root path
+    !request.nextUrl.pathname.startsWith('/') &&
+    // 2. Allow the sign-in and sign-up pages to be accessed without authentication
+    !request.nextUrl.pathname.startsWith('/sign-in') &&
     !request.nextUrl.pathname.startsWith('/sign-up') &&
     !request.nextUrl.pathname.startsWith('/owner-signup') &&
-    request.nextUrl.pathname !== '/'
+    !request.nextUrl.pathname.startsWith('/owner-signin') &&
+    // 3. Allow the auth processing routes to be accessed without authentication    
+    !request.nextUrl.pathname.startsWith('/callback')
+    
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
+    url.pathname = '/sign-in'
     return NextResponse.redirect(url)
   }
 

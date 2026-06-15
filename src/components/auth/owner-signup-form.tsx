@@ -24,8 +24,6 @@ import {
   FieldTitle,
 } from "@/components/ui/field"
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
-import SocialAuthButtons from "../ui/social-auth-button"
-import Separator from "../reusable/separator"
 
 const signupSchema = z.object({
   firstName: z.string().min(1, "First name is required."),
@@ -85,7 +83,7 @@ export function OwnerSignupForm() {
         email: data.email,
         password: data.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/callback`,
           data: {
             full_name: `${data.firstName} ${data.lastName}`,
             phone_number: data.phoneNumber,
@@ -115,10 +113,12 @@ export function OwnerSignupForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-              <Button className="bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-white" href="/owner-signin" variant="outline" onClick={() => setFormSuccess(false)}>
-                <Link
-                  href="/sign-in"
-                >
+              <Button
+                asChild
+                className="bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-white"
+                variant="outline"
+              >
+                <Link href="/owner-signin" onClick={() => setFormSuccess(false)}>
                   Go to Sign in
                 </Link>
               </Button>
@@ -280,8 +280,6 @@ export function OwnerSignupForm() {
               {isSubmitting ? "Registering..." : "Complete Registration"}
             </Button>
           </form>
-          <Separator />
-          <SocialAuthButtons />
         </CardContent>
       </Card>
     </main>
