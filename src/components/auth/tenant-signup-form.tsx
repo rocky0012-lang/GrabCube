@@ -93,7 +93,7 @@ export function TenantSignupForm() {
       email: data.email,
       password: data.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/callback`,
         data: {
           full_name: `${data.firstName} ${data.lastName}`,
           phone_number: data.phoneNumber,
@@ -121,10 +121,12 @@ export function TenantSignupForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-              <Button variant="outline" className="w-full bg-[var(--color-accent-gold-dark)] text-white hover:bg-[var(--color-accent-gold-light)]">
-              <Link href="/sign-in">
-                Go to Sign in
-              </Link>
+              <Button
+                asChild
+                variant="outline"
+                className="w-full bg-[var(--color-accent-gold-dark)] text-white hover:bg-[var(--color-accent-gold-light)]"
+              >
+                <Link href="/sign-in">Go to Sign in</Link>
               </Button>
           </CardContent>
         </Card>

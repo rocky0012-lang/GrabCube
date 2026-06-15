@@ -38,15 +38,20 @@ const providers: providerType[] = [
 const SocialAuthButtons = () => {
     const handleAuthLogin = async (provider: provider) => {
         const supabase = createClient()
-        await supabase.auth.signInWithOAuth({
+        const { error } = await supabase.auth.signInWithOAuth({
+          
           provider,
           options: {
-            redirectTo: `${window.location.origin}/auth/callback`,
+            redirectTo: `${window.location.origin}/callback`,
           },
         })
-    }
+        if (error) {
+          // TODO: replace with toast/form-level error UI
+          console.error("OAuth sign-in failed:", error.message)
+        }
+      }
 
-  return (
+    return (
     <div className="flex flex-row justify-center gap-12">
       {providers.map((provider: providerType) => (
         <SocialButton
@@ -64,6 +69,7 @@ const SocialAuthButtons = () => {
     </div>
   )
 }
+
 
 export default SocialAuthButtons
 
