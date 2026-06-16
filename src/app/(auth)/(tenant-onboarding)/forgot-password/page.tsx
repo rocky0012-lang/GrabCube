@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from "react"
 import { Input } from '@/components/base/input/input';
 import { KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,9 @@ type ForgotPasswordFormValues = {
 };
 
 const ForgotPassword = () => {
-    const {handleSubmit, formState: { errors, isSubmitting },
+   const [formError, setFormError] = React.useState<string | null>(null)
+
+    const { register, handleSubmit, formState: { errors, isSubmitting },
         } = useForm<ForgotPasswordFormValues>({
             resolver: zodResolver(
                 z.object({
@@ -26,6 +29,7 @@ const ForgotPassword = () => {
         const supabase = createClient();
 
         const onSubmit = async (data: ForgotPasswordFormValues) => {
+           setFormError(null)
           const { error } = await supabase.auth.resetPasswordForEmail(
             data.email,
             {
@@ -34,7 +38,7 @@ const ForgotPassword = () => {
           );
       
           if (error) {
-            console.error(error.message);
+             setFormError(error.message)
           }
         };
 
@@ -48,13 +52,19 @@ const ForgotPassword = () => {
             <div> 
                 <label htmlFor="email" className="flex pb-1">Email</label> 
                 <Input 
+                    id="email"
                     type="email" 
                     placeholder="Enter your email address" 
-                    className="w-80" 
+                    className="w-80"
+                    {...register("email")} 
                 /> 
+                 {errors.email && (
+                  <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>
+                )}
             </div> 
             <Button type="submit" disabled={isSubmitting} className="w-full h-8 bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-black text-lg"> 
                 {isSubmitting ? "Sending..." : "Send Reset Link"} </Button> 
+                {formError && <p className="mt-2 text-sm text-destructive">{formError}</p>}
         </form>
     </main>
   )

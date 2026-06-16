@@ -37,19 +37,20 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    // 1. Keep the user on the landing page if they are not authenticated and are trying to access the root path
-    !request.nextUrl.pathname.startsWith('/') &&
-    // 2. Allow the sign-in and sign-up pages to be accessed without authentication
-    !request.nextUrl.pathname.startsWith('/sign-in') &&
-    !request.nextUrl.pathname.startsWith('/sign-up') &&
-    !request.nextUrl.pathname.startsWith('/owner-signup') &&
-    !request.nextUrl.pathname.startsWith('/owner-signin') &&
-    // 3. Allow the auth processing routes to be accessed without authentication    
-    !request.nextUrl.pathname.startsWith('/callback')
-    
-  ) {
+  const pathname = request.nextUrl.pathname
+  const publicRoutes = new Set([
+    '/',
+    '/sign-in',
+    '/sign-up',
+    '/owner-signup',
+    '/owner-signin',
+    '/forgot-password',
+    '/reset-password',
+    '/auth/auth-code-error',
+  ])
+  const isPublicRoute = publicRoutes.has(pathname) || pathname.startsWith('/callback')
+
+  if (!user && !isPublicRoute) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
     url.pathname = '/sign-in'

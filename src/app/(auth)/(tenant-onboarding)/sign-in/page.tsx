@@ -51,7 +51,7 @@ export default function TenantSigninForm() {
                   setFormError(error.message)
                   return
                 }
-                router.push("/complete-profile") // Redirect to tenant dashboard on successful sign-in
+                router.push("/tenant/dashboard") // Redirect to tenant dashboard on successful sign-in
                 // Handle success (e.g., redirect)
               }
     return (
