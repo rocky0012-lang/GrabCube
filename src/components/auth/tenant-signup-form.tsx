@@ -30,6 +30,7 @@ import {
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
 import SocialAuthButtons from "../ui/social-auth-button"
 import Separator from "../reusable/separator"
+import ForgotPassword from "@/app/(auth)/(tenant-onboarding)/forgot-password/page"
 
 // Validation Rules
 const signupSchema = z.object({
@@ -274,6 +275,12 @@ export function TenantSignupForm() {
             {isSubmitting ? "Registering..." : "Complete Registration"}
           </Button>
         </form>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2.5">
+          Already have an account?{" "}
+          <Link href="/sign-in" className="text-[var(--color-accent-gold)] hover:underline">
+            Sign in
+          </Link>
+        </p>
         <Separator />
         <SocialAuthButtons />
       </CardContent>
