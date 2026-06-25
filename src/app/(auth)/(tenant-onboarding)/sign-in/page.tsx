@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation"
 import { CubeGrabLogo } from "@/components/reusable/cubegrab-logo"
 import SocialAuthButtons from "@/components/ui/social-auth-button"
 import Separator from "@/components/reusable/separator"
+import { Link } from "react-aria-components"
 
 const signinSchema = z.object({
   email: z.string().email("Please input a valid email address."),
@@ -51,7 +52,7 @@ export default function TenantSigninForm() {
                   setFormError(error.message)
                   return
                 }
-                router.push("/tenant/dashboard") // Redirect to tenant dashboard on successful sign-in
+                router.push("/dashboard") // Redirect to tenant dashboard on successful sign-in
                 // Handle success (e.g., redirect)
               }
     return (
@@ -91,6 +92,24 @@ export default function TenantSigninForm() {
                   {isSubmitting ? "Signing in..." : "Sign In"}
               </Button>
           </form>
+          <div className="flex items-center justify-between mt-2.5">
+            <p className="text-sm text-muted-foreground">
+              Don't have an account?{" "}
+              <Link
+                href="/sign-up"
+                className="text-[var(--color-accent-gold)] hover:underline"
+              >
+                Sign up
+              </Link>
+            </p>
+                      
+            <Link
+              href="/forgot-password"
+              className="text-sm text-[var(--color-accent-gold)] hover:underline"
+            >
+              Forgot your password?
+            </Link>
+          </div>
           <Separator />
           <SocialAuthButtons />
           </CardContent>

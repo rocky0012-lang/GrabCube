@@ -48,7 +48,10 @@ export async function updateSession(request: NextRequest) {
     '/reset-password',
     '/auth/auth-code-error',
   ])
-  const isPublicRoute = publicRoutes.has(pathname) || pathname.startsWith('/callback')
+  const isPublicRoute = 
+    publicRoutes.has(pathname) || 
+    pathname === '/callback' ||
+    pathname.startsWith('/callback')
 
   if (!user && !isPublicRoute) {
     // no user, potentially respond by redirecting the user to the login page
