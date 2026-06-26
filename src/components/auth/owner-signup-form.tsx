@@ -280,6 +280,12 @@ export function OwnerSignupForm() {
               {isSubmitting ? "Registering..." : "Complete Registration"}
             </Button>
           </form>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2.5">
+            Already have an account?{" "}
+            <Link href="/owner-signin" className="text-[var(--color-accent-gold)] hover:underline">
+              Sign in
+            </Link>
+        </p>
         </CardContent>
       </Card>
     </main>

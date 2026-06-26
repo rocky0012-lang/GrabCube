@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { email, z } from "zod"
+import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
@@ -30,7 +30,6 @@ import {
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
 import SocialAuthButtons from "../ui/social-auth-button"
 import Separator from "../reusable/separator"
-import ForgotPassword from "@/app/(auth)/(tenant-onboarding)/forgot-password/page"
 
 // Validation Rules
 const signupSchema = z.object({
@@ -243,7 +242,9 @@ export function TenantSignupForm() {
 
           {/* Terms checkbox */}
           
-            <Field data-invalid={!!errors.terms} className="flex flex-col gap-4 items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+            <Field data-invalid={!!errors.terms} 
+              className="flex flex-col gap-4 items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+              <FieldLabel>
               <FieldContent>
                 <Checkbox
                   id="terms"
@@ -258,6 +259,7 @@ export function TenantSignupForm() {
                 </FieldDescription>
                 <FieldError>{errors.terms?.message}</FieldError>
               </div>
+            </FieldLabel>
             <FieldLabel>
               <Field orientation="horizontal">
                 <Checkbox id="toggle-checkbox-2" name="toggle-checkbox-2" />

@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation"
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
 import SocialAuthButtons from "../ui/social-auth-button"
 import Separator from "@/components/reusable/separator"
+import Link from "next/link"
 
 const signinSchema = z.object({
   email: z.string().email("Please input a valid email address."),
@@ -91,6 +92,24 @@ export function OwnerSigninForm() {
                   {isSubmitting ? "Signing in..." : "Sign In"}
               </Button>
           </form>
+          <div className="flex items-center justify-between mt-2.5">
+            <p className="text-sm text-muted-foreground">
+              Don't have an account?{" "}
+              <Link
+                href="/owner-signup"
+                className="text-[var(--color-accent-gold)] hover:underline"
+              >
+                Sign up
+              </Link>
+            </p>
+                      
+            <Link
+              href="/forgot-password"
+              className="text-sm text-[var(--color-accent-gold)] hover:underline"
+            >
+              Forgot your password?
+            </Link>
+          </div>
           <Separator />
           <SocialAuthButtons />
           </CardContent>
