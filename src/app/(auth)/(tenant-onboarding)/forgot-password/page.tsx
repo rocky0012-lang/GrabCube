@@ -1,14 +1,13 @@
 'use client'
 
 import * as React from "react"
-import { Input } from '@/components/base/input/input';
+import { Input } from '@/components/ui/input';
 import { KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { z } from "zod"
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from "next/navigation"
 import Link from 'next/link';
 
 type ForgotPasswordFormValues = {
