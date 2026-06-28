@@ -50,9 +50,37 @@ export function OwnerSigninForm() {
                 })
                 if (error) {
                   setFormError(error.message)
-                  return
+                  return;
                 }
-                router.push("/owner/dashboard") // Redirect to owner dashboard on successful sign-in
+
+                //Get the authenticated user
+                const { data: { user } } = await supabase.auth.getUser()
+                if (!user) {
+                  setFormError("User not found.");
+                  return;
+                }
+
+                //Get role of the authenticated user
+                const { data: profile, error: profileError } = await supabase
+                  .from("users")
+                  .select("user_role")
+                  .eq("id", user.id)
+                  .single();
+
+                  if (profileError || !profile) {
+                    await supabase.auth.signOut(); // Sign out the user if role fetch fails
+                    setFormError("Unable to verify your account.");
+                    return;
+                  }
+
+                  if (profile.user_role !== "owner") {
+                    await supabase.auth.signOut();
+                    setFormError("This account is not registered as an owner. Please use the correct sign-in page.");
+                    return;
+                  }
+
+                // If the user is an owner, redirect to the owner dashboard
+                router.replace("/owner/dashboard") // Redirect to owner dashboard on successful sign-in
                 // Handle success (e.g., redirect)
               }
     return (
@@ -94,7 +122,7 @@ export function OwnerSigninForm() {
           </form>
           <div className="flex items-center justify-between mt-2.5">
             <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
+               Don&apos;t have an account?{" "}
               <Link
                 href="/owner-signup"
                 className="text-[var(--color-accent-gold)] hover:underline"

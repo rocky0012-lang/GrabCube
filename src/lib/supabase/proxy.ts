@@ -37,6 +37,22 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  let userRole: string | null = null;
+
+  if (user) {
+    const { data: profile, error } = await supabase
+      .from("users")
+      .select("user_role")
+      .eq("id", user.id)
+      .single();
+  
+    if (error) {
+      console.error("Failed to fetch user role:", error);
+    } else {
+      userRole = profile.user_role;
+    }
+  }
+
   const pathname = request.nextUrl.pathname
   const publicRoutes = new Set([
     '/',
@@ -58,6 +74,22 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/sign-in'
     return NextResponse.redirect(url)
+  }
+
+  const isOwnerRoute = pathname.startsWith("/owner/");
+  const isTenantRoute = pathname.startsWith("/tenant/");
+    // Protect owner routes
+  if (isOwnerRoute && userRole !== "owner") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/unauthorized";
+      return NextResponse.redirect(url);
+  }
+
+  // Protect tenant routes
+if (isTenantRoute && userRole !== "tenant") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/unauthorized";
+      return NextResponse.redirect(url);
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're

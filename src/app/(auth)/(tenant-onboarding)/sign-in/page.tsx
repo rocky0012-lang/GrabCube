@@ -50,9 +50,38 @@ export default function TenantSigninForm() {
                 })
                 if (error) {
                   setFormError(error.message)
-                  return
+                  return;
                 }
-                router.push("/dashboard") // Redirect to tenant dashboard on successful sign-in
+
+                //Get the authenticated user
+                const { data: { user }, } = await supabase.auth.getUser();
+
+                if (!user) {
+                  setFormError("User not found.");
+                  return;
+                }
+
+                // Check if the user has the "tenant" role
+                const { data: profile, error: profileError } = await supabase
+                  .from("users")
+                  .select("user_role")
+                  .eq("id", user.id)
+                  .single();
+
+                if (profileError || !profile) {
+                  setFormError("Unable to verify your account.");
+                  return;
+                }
+
+                // If the user is not a tenant, sign them out and show an error
+                if (profile.user_role !== "tenant") {
+                  await supabase.auth.signOut();
+                  setFormError("This account is not registered as a tenant. Please use the correct sign-in page.");
+                  return;
+                }
+
+                // If the user is a tenant, redirect to the tenant dashboard
+                router.replace("/tenant/dashboard") // Redirect to tenant dashboard on successful sign-in
                 // Handle success (e.g., redirect)
               }
     return (
@@ -94,7 +123,7 @@ export default function TenantSigninForm() {
           </form>
           <div className="flex items-center justify-between mt-2.5">
             <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 href="/sign-up"
                 className="text-[var(--color-accent-gold)] hover:underline"
