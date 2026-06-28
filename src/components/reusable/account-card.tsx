@@ -17,7 +17,8 @@ export const DropdownAccountCardSM = () => {
 
     const [selectedAccount, setSelectedAccount] = useState<Selection>(new Set(["olivia"]));
     const { resolvedTheme, setTheme } = useTheme();
-    const isDark = resolvedTheme === "dark";
+    const [ mounted, setMounted ] = useState(false);
+    const isDark = mounted && resolvedTheme === "dark";
 
     return (
         <Dropdown.Root>
@@ -51,9 +52,9 @@ export const DropdownAccountCardSM = () => {
                         Settings
                     </Dropdown.Item>
                     <Dropdown.Section selectionMode="single" selectedKeys={new Set([isDark ? "dark-mode" : "light-mode"])}>
-                        <Dropdown.Item id="dark-mode" icon={Moon01} selectionIndicator="toggle" onAction={() => setTheme(isDark ? "light" : "dark")}>
+                        {mounted && (<Dropdown.Item id="dark-mode" icon={Moon01} selectionIndicator="toggle" onAction={() => setTheme(isDark ? "light" : "dark")}>
                             {isDark ? "Light mode" : "Dark mode"}
-                        </Dropdown.Item>
+                        </Dropdown.Item>)}
                     </Dropdown.Section>
 
                     <SubmenuTrigger>

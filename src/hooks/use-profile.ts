@@ -14,10 +14,14 @@ export function useProfile() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let cancelled = false;
+
         const loadProfile = async () => {
             const supabase = createClient();
 
-            const { data: { user}, error: authError } = await supabase.auth.getUser();
+            const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+            if (cancelled) return;
 
             if (authError || !user) {
                 setLoading(false);
@@ -26,19 +30,32 @@ export function useProfile() {
 
             const { data, error } = await supabase
                 .from("users")
-                .select("*")
+                .select("id,full_name, email, phone_number, user_role")
                 .eq("id", user.id)
                 .single();
 
-            if (!error) {
+            if (cancelled) return;
+
+            if (error) {
+                console.error("Failed to load profile:", error);
+            } else {
                 setProfile(data);
             }
 
-            setLoading(false);
+            if (!cancelled) {
+                setLoading(false);
+            }
         };
 
         loadProfile();
-    }, []);
 
-    return { profile, loading };
+        return () => {
+            cancelled = true;
+        };
+
+    }, []);
+        return {
+        profile,
+        loading,
+    };
 }

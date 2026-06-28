@@ -87,23 +87,23 @@
   --color-icon-secondary: #a0a0a0;         /* Secondary/disabled icons - gray */
   --color-icon-accent: #c9a961;            /* Accent icons - gold highlights */
 
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --background:  #F8F8FF;       /* F0F8FF */ /* FFFAFA */ /* FFFFF0 */ /* F5F5F5 */  /* Light background for main app screens */
+  --foreground: #1b1b1b;
+  --card: #ffffff;
+  --card-foreground:  #1b1b1b;
+  --popover: #ffffff;
+  --popover-foreground:  #1b1b1b;
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --secondary: #efe8dc;
+  --secondary-foreground:  #1b1b1b;
+  --muted: #f2eee6;
+  --muted-foreground: #6b7280;
+  --accent:  #ece5d7;
+  --accent-foreground: #1b1b1b;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  --border: #ddd4c5;
+  --input: #ddd4c5;
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -111,7 +111,7 @@
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
+  --sidebar: #f4f1ea;
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);

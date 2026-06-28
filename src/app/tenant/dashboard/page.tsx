@@ -4,7 +4,7 @@ import LogoutButton from "@/components/reusable/logoutbutton"
 
 const TenantDashboard = () => {
   return (
-    <div className="flex flex-col align-center justify-between">
+    <div className="flex flex-col items-center justify-between">
       
         <h1>Tenant Dashboard</h1>
         <p>Hi, welcome to your dashboard!</p>
