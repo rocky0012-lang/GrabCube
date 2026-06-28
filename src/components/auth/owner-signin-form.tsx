@@ -54,8 +54,9 @@ export function OwnerSigninForm() {
                 }
 
                 //Get the authenticated user
-                const { data: { user } } = await supabase.auth.getUser()
-                if (!user) {
+                const { data: { user }, error: userError } = await supabase.auth.getUser()
+                if (userError || !user) {
+                  await supabase.auth.signOut(); // Sign out the user if fetching user fails
                   setFormError("User not found.");
                   return;
                 }

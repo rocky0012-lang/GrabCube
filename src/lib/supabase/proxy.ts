@@ -37,23 +37,29 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  const pathname = request.nextUrl.pathname
+
+  const isOwnerRoute = 
+    pathname === "/owner" || pathname.startsWith("/owner/");
+  const isTenantRoute = 
+    pathname === "/tenant" || pathname.startsWith("/tenant/");
+
   let userRole: string | null = null;
 
-  if (user) {
+  if (user && (isOwnerRoute || isTenantRoute)) {
     const { data: profile, error } = await supabase
       .from("users")
       .select("user_role")
       .eq("id", user.id)
       .single();
   
-    if (error) {
+    if (error || !profile) {
       console.error("Failed to fetch user role:", error);
     } else {
       userRole = profile.user_role;
     }
   }
 
-  const pathname = request.nextUrl.pathname
   const publicRoutes = new Set([
     '/',
     '/sign-in',
@@ -69,27 +75,35 @@ export async function updateSession(request: NextRequest) {
     pathname === '/callback' ||
     pathname.startsWith('/callback')
 
+  function redirectWithCookies(url: URL) {
+    const response = NextResponse.redirect(url)
+
+    supabaseResponse.cookies.getAll().forEach(({ name, value, ...options}) => {
+      response.cookies.set(name, value, options);
+    });
+    return response;
+  }
+
   if (!user && !isPublicRoute) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
     url.pathname = '/sign-in'
-    return NextResponse.redirect(url)
+    return redirectWithCookies(url)
   }
+  
 
-  const isOwnerRoute = pathname.startsWith("/owner/");
-  const isTenantRoute = pathname.startsWith("/tenant/");
     // Protect owner routes
   if (isOwnerRoute && userRole !== "owner") {
       const url = request.nextUrl.clone();
       url.pathname = "/unauthorized";
-      return NextResponse.redirect(url);
+      return redirectWithCookies(url);
   }
 
   // Protect tenant routes
 if (isTenantRoute && userRole !== "tenant") {
       const url = request.nextUrl.clone();
       url.pathname = "/unauthorized";
-      return NextResponse.redirect(url);
+      return redirectWithCookies(url);
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're

@@ -54,9 +54,10 @@ export default function TenantSigninForm() {
                 }
 
                 //Get the authenticated user
-                const { data: { user }, } = await supabase.auth.getUser();
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-                if (!user) {
+                 if (userError || !user) {
+                  await supabase.auth.signOut();
                   setFormError("User not found.");
                   return;
                 }
@@ -69,6 +70,7 @@ export default function TenantSigninForm() {
                   .single();
 
                 if (profileError || !profile) {
+                  await supabase.auth.signOut();
                   setFormError("Unable to verify your account.");
                   return;
                 }
