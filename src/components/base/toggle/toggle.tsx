@@ -44,8 +44,8 @@ export const ToggleBase = ({ className, isHovered, isDisabled, isFocusVisible, i
     return (
         <div
             className={cx(
-                "cursor-pointer rounded-full bg-tertiary ring-[0.5px] ring-secondary outline-focus-ring transition duration-150 ease-linear ring-inset",
-                isSelected && "bg-brand-solid",
+                "cursor-pointer rounded-full bg-tertiary ring-[0.5px] ring-secondary ring-[var(--color-accent-gold)] transition duration-150 ease-linear ring-inset",
+                isSelected && "bg-[var(--color-accent-gold)]",
                 isSelected && isHovered && "bg-brand-solid_hover",
                 isDisabled && "cursor-not-allowed opacity-50",
                 isFocusVisible && "outline-2 outline-offset-2",
