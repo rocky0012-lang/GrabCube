@@ -18,9 +18,6 @@ export default function LogoutButton() {
       if (error) {
         throw error
       }
-
-      const { data } = await supabase.auth.getSession()
-      console.log('Session after logout:', data.session) // This should be null after logout
       router.replace("/sign-in") // Redirect to sign-in page after logout
       router.refresh() // Refreshes the server state
     } catch (err) {

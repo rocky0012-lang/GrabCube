@@ -4,7 +4,7 @@ import * as React from "react"
 import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, MailCheck } from "lucide-react"
 import PhoneInput from "react-phone-number-input"
 import "react-phone-number-input/style.css";
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
@@ -30,6 +30,8 @@ import {
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
 import SocialAuthButtons from "../ui/social-auth-button"
 import Separator from "../reusable/separator"
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 // Validation Rules
 const signupSchema = z.object({
@@ -62,6 +64,23 @@ export function TenantSignupForm() {
   const [showPassword, setShowPassword] = React.useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
   const user_role = "tenant" // Hidden field value
+  const router = useRouter()
+
+  useEffect(() => {
+        if (!formSuccess) return;
+        
+  
+        const { data: { subscription },
+        } = supabase.auth.onAuthStateChange((event) => {
+          if (event === 'SIGNED_IN') {
+            router.replace("/tenant/complete-profile");
+          }
+        });
+  
+        return () => {
+          subscription.unsubscribe();
+        };
+      }, [formSuccess, router]);
 
   const {
     register,
@@ -93,7 +112,7 @@ export function TenantSignupForm() {
       email: data.email,
       password: data.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/callback`,
+        emailRedirectTo: `${window.location.origin}/callback?next=/email-confirmed`,
         data: {
           full_name: `${data.firstName} ${data.lastName}`,
           phone_number: data.phoneNumber,
@@ -121,13 +140,34 @@ export function TenantSignupForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-              <Button
-                asChild
-                variant="outline"
-                className="w-full bg-[var(--color-accent-gold-dark)] text-white hover:bg-[var(--color-accent-gold-light)]"
-              >
-                <Link href="/sign-in">Go to Sign in</Link>
-              </Button>
+            <div className="flex justify-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
+                <MailCheck className="h-7 w-7 text-green-600 dark:text-green-400" />
+              </div>
+            </div>
+            <div className="space-y-2 text-center">
+              <p className="text-sm text-muted-foreground">
+                We've sent a verification link to your email address.
+              </p>
+              
+              <p className="text-sm text-muted-foreground">
+                After verifying your email, you'll be automatically signed in and redirected
+                to complete your identity verification.
+              </p>
+            </div>
+            <div className="rounded-lg border bg-muted/40 p-4 text-sm text-muted-foreground">
+              <p className="font-medium mb-2">Next steps</p>
+
+              <ol className="list-decimal space-y-1 pl-5">
+                <li>Open the email we just sent.</li>
+                <li>Click the verification link.</li>
+                <li>You'll be signed in automatically.</li>
+                <li>Complete your identity verification.</li>
+              </ol>
+            </div>
+            <p className="text-center text-xs text-muted-foreground">
+              Didn't receive the email? Check your spam or junk folder.
+            </p>
           </CardContent>
         </Card>
       )

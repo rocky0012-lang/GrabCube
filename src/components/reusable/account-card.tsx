@@ -7,9 +7,11 @@ import { Button as AriaButton, SubmenuTrigger } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { cx } from "@/lib/utils/cx";
-import LogoutButton from "./logoutbutton";
+import { Button } from "@/components/base/buttons/button";
 import { useProfile } from "@/hooks/use-profile";
 import { useTheme } from "next-themes";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 
 export const DropdownAccountCardSM = () => {
@@ -17,8 +19,23 @@ export const DropdownAccountCardSM = () => {
 
     const [selectedAccount, setSelectedAccount] = useState<Selection>(new Set(["olivia"]));
     const { resolvedTheme, setTheme } = useTheme();
-    const [ mounted, setMounted ] = useState(false);
+    const [ mounted, setMounted ] = useState(true);
     const isDark = mounted && resolvedTheme === "dark";
+    const supabase = createClient();
+    const router = useRouter();
+
+
+    const handleLogout = async () => {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        console.error("Logout failed:", error);
+        return;
+      }
+
+      router.replace("/signin");
+      router.refresh();
+    };
 
     return (
         <Dropdown.Root>
@@ -90,9 +107,9 @@ export const DropdownAccountCardSM = () => {
 
                     
                 </Dropdown.Menu>
-                <div className="mb-2">
-                    <LogoutButton />
-                </div>
+                <Button size="xs" color="secondary-destructive" iconLeading={LogOut01} className="text-center hover:bg-red-500 hover:text-white transition-colors" onClick={handleLogout} >
+                                        Sign out
+                </Button>
                 <div className="flex justify-between border-t border-secondary px-4 py-3">
                     <span className="truncate text-sm text-quaternary">&copy; CubeGrab Inc</span>
                     <span className="text-sm text-quaternary">2026</span>

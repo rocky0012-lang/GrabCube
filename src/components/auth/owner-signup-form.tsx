@@ -4,11 +4,12 @@ import * as React from "react"
 import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, MailCheck } from "lucide-react"
 import PhoneInput from "react-phone-number-input"
 import "react-phone-number-input/style.css"
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -24,6 +25,7 @@ import {
   FieldTitle,
 } from "@/components/ui/field"
 import { CubeGrabLogo } from "../reusable/cubegrab-logo"
+import { useEffect } from "react"
 
 const signupSchema = z.object({
   firstName: z.string().min(1, "First name is required."),
@@ -52,6 +54,25 @@ export function OwnerSignupForm() {
   const [formError, setFormError] = React.useState<string | null>(null)
   const [formSuccess, setFormSuccess] = React.useState(false)
 
+  const router = useRouter()
+  const supabase = createClient();
+
+  useEffect(() => {
+      if (!formSuccess) return;
+      
+
+      const { data: { subscription },
+      } = supabase.auth.onAuthStateChange((event) => {
+        if (event === 'SIGNED_IN') {
+          router.replace("/owner/identity-verification");
+        }
+      });
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }, [formSuccess, router]);
+
   const {
     register,
     handleSubmit,
@@ -76,18 +97,16 @@ export function OwnerSignupForm() {
 
   async function onSubmit(data: SignupValues) {
     setFormError(null)
-
-    const supabase = createClient()
     
       const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/callback`,
+          emailRedirectTo: `${window.location.origin}/callback?next=/email-confirmed`,
           data: {
             full_name: `${data.firstName} ${data.lastName}`,
             phone_number: data.phoneNumber,
-            verification_status: "unverified",
+            verification_status: "pending",
             user_role: "owner",
           },
         },
@@ -113,15 +132,34 @@ export function OwnerSignupForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-              <Button
-                asChild
-                className="bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-white"
-                variant="outline"
-              >
-                <Link href="/owner-signin" onClick={() => setFormSuccess(false)}>
-                  Go to Sign in
-                </Link>
-              </Button>
+            <div className="flex justify-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
+                <MailCheck className="h-7 w-7 text-green-600 dark:text-green-400" />
+              </div>
+            </div>
+            <div className="space-y-2 text-center">
+              <p className="text-sm text-muted-foreground">
+                We've sent a verification link to your email address.
+              </p>
+              
+              <p className="text-sm text-muted-foreground">
+                After verifying your email, you'll be automatically signed in and redirected
+                to complete your identity verification.
+              </p>
+            </div>
+            <div className="rounded-lg border bg-muted/40 p-4 text-sm text-muted-foreground">
+              <p className="font-medium mb-2">Next steps</p>
+
+              <ol className="list-decimal space-y-1 pl-5">
+                <li>Open the email we just sent.</li>
+                <li>Click the verification link.</li>
+                <li>You'll be signed in automatically.</li>
+                <li>Complete your identity verification.</li>
+              </ol>
+            </div>
+            <p className="text-center text-xs text-muted-foreground">
+              Didn't receive the email? Check your spam or junk folder.
+            </p>
           </CardContent>
         </Card>
       </main>
