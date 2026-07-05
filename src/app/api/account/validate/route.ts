@@ -17,21 +17,22 @@ export async function POST(request: Request) {
       );
     }
 
-    const { data: phoneUser } = await serviceRoleClient
+    const { data: emailUser } = await serviceRoleClient
         .from("users")
         .select("id")
         .eq("email", email)
         .maybeSingle();
 
-    const { data: emailUser } = await serviceRoleClient
+    const { data: phoneUser } = await serviceRoleClient
         .from("users")
         .select("id")
         .eq("phone_number", phoneNumber)
         .maybeSingle();
+    
+    const canCreateAccount = !emailUser && !phoneUser;
 
     return NextResponse.json({
-      emailExists: false,
-      phoneExists: false,
+      canCreateAccount,
     });
   } catch (error) {
     console.error(error);

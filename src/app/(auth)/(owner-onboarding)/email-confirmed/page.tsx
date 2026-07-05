@@ -31,8 +31,7 @@ export default function EmailConfirmedPage() {
 
           <CardContent className="space-y-4 text-center">
             <p className="text-sm text-muted-foreground">
-              You can now return to the previous CubeGrab tab to continue
-              .
+              You can now return to the previous CubeGrab tab to continue.
             </p>
 
             <div className="rounded-lg border bg-muted/40 p-4">

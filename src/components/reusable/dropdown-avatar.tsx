@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { Container, HelpCircle, LayersTwo01, LogOut01, Moon01, Settings01, User01 } from "@untitledui/icons";
-import type { Selection } from "react-aria-components";
+import { HelpCircle, LayersTwo01, LogOut01, Moon01, Settings01, User01 } from "@untitledui/icons";
 import { Button as AriaButton, SubmenuTrigger } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { Button } from "@/components/base/buttons/button";
@@ -19,7 +18,7 @@ export const DropdownAvatar = () => {
     const { profile, loading } = useProfile();
 
     const { resolvedTheme, setTheme } = useTheme();
-    const [ mounted, setMounted ] = useState(true);
+    const [ mounted, setMounted ] = useState(false);
     const isDark = mounted && resolvedTheme === "dark";
     const router = useRouter();
     const supabase = createClient();

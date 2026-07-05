@@ -56,7 +56,7 @@ const signupSchema = z.object({
 type SignupValues = z.infer<typeof signupSchema>
 
 export function TenantSignupForm() {
-    const [error, setError] = React.useState<string | null>(null)
+    const [formError, setFormError] = React.useState<string | null>(null)
     const [formSuccess, setFormSuccess] = React.useState(false)
     //create a supabase client
     const supabase = createClient()
@@ -106,7 +106,30 @@ export function TenantSignupForm() {
   const termsValue = watch("terms")
 
   async function onSubmit(data: SignupValues) {
-    setError(null)
+    setFormError(null)
+
+    const validationResponse = await fetch("/api/account/validate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+      }),
+    });
+
+    const validation = await validationResponse.json();
+    
+    if (!validation.canCreateAccount) {
+      setFormError("Unable to create your account. Please review your information or sign in if you already have an account.");
+      return;
+    }
+    
+    if (!validationResponse.ok) {
+      setFormError("An error occurred while validating your account. Please try again.");
+      return;
+    }
     
     const { error: signUpError } = await supabase.auth.signUp({
       email: data.email,
@@ -123,7 +146,7 @@ export function TenantSignupForm() {
     })
     
     if (signUpError) {
-      setError(signUpError.message)
+      setFormError(signUpError.message)
       return
     }
     
@@ -152,7 +175,7 @@ export function TenantSignupForm() {
               
               <p className="text-sm text-muted-foreground">
                 After verifying your email, you'll be automatically signed in and redirected
-                to complete your identity verification.
+                to complete your profile.
               </p>
             </div>
             <div className="rounded-lg border bg-muted/40 p-4 text-sm text-muted-foreground">
@@ -162,7 +185,7 @@ export function TenantSignupForm() {
                 <li>Open the email we just sent.</li>
                 <li>Click the verification link.</li>
                 <li>You'll be signed in automatically.</li>
-                <li>Complete your identity verification.</li>
+                <li>Complete your profile.</li>
               </ol>
             </div>
             <p className="text-center text-xs text-muted-foreground">
@@ -312,6 +335,10 @@ export function TenantSignupForm() {
               </Field>
             </FieldLabel>
           </Field>
+
+          {formError && (
+            <p className="text-sm font-normal text-destructive">{formError}</p>
+          )}
 
           <Button type="submit" disabled={isSubmitting} className="w-full h-8 bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-black text-lg font-medium">
             {isSubmitting ? "Registering..." : "Complete Registration"}
