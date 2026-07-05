@@ -97,8 +97,31 @@ export function OwnerSignupForm() {
 
   async function onSubmit(data: SignupValues) {
     setFormError(null)
+
+    const validationResponse = await fetch("/api/account/validate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+      }),
+    });
+
+    const validation = await validationResponse.json();
     
-      const { error } = await supabase.auth.signUp({
+    if (!validation.canCreateAccount) {
+      setFormError("Unable to create your account. Please review your information or sign in if you already have an account.");
+      return;
+    }
+    
+    if (!validationResponse.ok) {
+      setFormError("An error occurred while validating your account. Please try again.");
+      return;
+    }
+
+    const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
