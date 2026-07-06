@@ -28,7 +28,7 @@ export default function HeaderNavigation() {
         </nav>
       <div className="flex items-center gap-4 ml-auto">
         <ThemeToggle />
-        <Button href="/sign-in"
+        <Button href="/get-started"
           className="
             bg-[var(--color-accent-gold)]
             text-white

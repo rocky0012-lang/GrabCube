@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { createClient } from '@/lib/supabase/client'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { z } from "zod"
@@ -15,12 +15,11 @@ import {
   FieldError,
 } from "@/components/ui/field"
 import { useRouter } from "next/navigation"
-import { CubeGrabLogo } from "../reusable/cubegrab-logo"
-import SocialAuthButtons from "../ui/social-auth-button"
+import { CubeGrabLogo } from "@/components/reusable/cubegrab-logo"
+import SocialAuthButtons from "@/components/ui/social-auth-button"
 import Separator from "@/components/reusable/separator"
-import Link from "next/link"
-import { BackButton } from "@/components/reusable/back-button"
-
+import { Link } from "react-aria-components"
+import { BackButton } from "../reusable/back-button"
 const signinSchema = z.object({
   email: z.string().email("Please input a valid email address."),
   password: z.string().min(8, "Password must contain 8+ characters."),
@@ -28,7 +27,7 @@ const signinSchema = z.object({
 
 type SigninValues = z.infer<typeof signinSchema>
 
-export function OwnerSigninForm() {
+export function TenantSigninForm() {
     const [formError, setFormError] = React.useState<string | null>(null)
     const router = useRouter()
     const { register, 
@@ -55,50 +54,52 @@ export function OwnerSigninForm() {
                 }
 
                 //Get the authenticated user
-                const { data: { user }, error: userError } = await supabase.auth.getUser()
-                if (userError || !user) {
-                  await supabase.auth.signOut(); // Sign out the user if fetching user fails
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+                 if (userError || !user) {
+                  await supabase.auth.signOut();
                   setFormError("User not found.");
                   return;
                 }
 
-                //Get role of the authenticated user
+                // Check if the user has the "tenant" role
                 const { data: profile, error: profileError } = await supabase
                   .from("users")
                   .select("user_role")
                   .eq("id", user.id)
                   .single();
 
-                  if (profileError || !profile) {
-                    await supabase.auth.signOut(); // Sign out the user if role fetch fails
-                    setFormError("Unable to verify your account.");
-                    return;
-                  }
+                if (profileError || !profile) {
+                  await supabase.auth.signOut();
+                  setFormError("Unable to verify your account.");
+                  return;
+                }
 
-                  if (profile.user_role !== "owner") {
-                    await supabase.auth.signOut();
-                    setFormError("This account is not registered as an owner. Please use the correct sign-in page.");
-                    return;
-                  }
+                // If the user is not a tenant, sign them out and show an error
+                if (profile.user_role !== "tenant") {
+                  await supabase.auth.signOut();
+                  setFormError("This account is not registered as a tenant. Please use the correct sign-in page.");
+                  return;
+                }
 
-                // If the user is an owner, redirect to the owner dashboard
-                router.replace("/owner/dashboard") // Redirect to owner dashboard on successful sign-in
+                // If the user is a tenant, redirect to the tenant dashboard
+                router.replace("/tenant/dashboard") // Redirect to tenant dashboard on successful sign-in
                 // Handle success (e.g., redirect)
               }
     return (
         <>
           {/* Back Button */}
-          <div className="w-full max-w-xl">
-            <BackButton href="/" />
-          </div>
+            <div className="w-full max-w-xl">
+              <BackButton href="/" />
+            </div>
           <div className="text-center mb-8">
             <CubeGrabLogo />
           </div>
           <div className="w-full max-w-xl mx-auto mb-6 px-4">
           <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-2xl max-w-xl mx-auto">
-            Owner Sign In
+            Tenant Sign In
           </p>
-          <h3>Log in to your account to manage your listings, view reservations, and more.</h3>
+          <h3>Log in to find your perfect space.</h3>
           </div>
         <Card className="w-full max-w-xl mx-auto bg-[var(--color-bg-secondary-base)]/10 dark:bg-[var(--color-bg-primary-base)]/5 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl">
           <CardContent>
@@ -128,9 +129,9 @@ export function OwnerSigninForm() {
           </form>
           <div className="flex items-center justify-between mt-2.5">
             <p className="text-sm text-muted-foreground">
-               Don&apos;t have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
-                href="/owner-signup"
+                href="/sign-up"
                 className="text-[var(--color-accent-gold)] hover:underline"
               >
                 Sign up
@@ -138,7 +139,7 @@ export function OwnerSigninForm() {
             </p>
                       
             <Link
-              href="/forgot-password?returnTo=/owner-signin"
+              href="/forgot-password?returnTo=/sign-in"
               className="text-sm text-[var(--color-accent-gold)] hover:underline"
             >
               Forgot your password?

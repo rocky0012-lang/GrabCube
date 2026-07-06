@@ -33,7 +33,7 @@ const IdentityVerification = () => {
                 className="w-full p-2 pr-10 border h-10 placeholder:[color:var(--color-text-tertiary)] rounded-md" 
               />
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <IdCard className="h-5 w-5 text-gray-950" />
+                <IdCard className="h-5 w-5 text-fg-tertiary" />
               </div>
             </div>
           </CardContent>

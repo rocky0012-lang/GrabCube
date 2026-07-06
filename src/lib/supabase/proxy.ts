@@ -61,11 +61,16 @@ export async function updateSession(request: NextRequest) {
   }
 
   const publicRoutes = new Set([
+     // Marketing
     '/',
+    '/get-started',
+    // Tenant Authentication
     '/sign-in',
     '/sign-up',
+    // Owner Authentication
     '/owner-signup',
     '/owner-signin',
+    // Password Reset
     '/forgot-password',
     '/reset-password',
     '/auth/auth-code-error',
