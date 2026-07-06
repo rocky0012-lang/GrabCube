@@ -10,6 +10,8 @@ import "react-phone-number-input/style.css"
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { validateAccount } from "@/lib/api/account-validation"
+import { BackButton } from "@/components/reusable/back-button"
 
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -98,26 +100,24 @@ export function OwnerSignupForm() {
   async function onSubmit(data: SignupValues) {
     setFormError(null)
 
-    const validationResponse = await fetch("/api/account/validate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-      }),
-    });
-
-    const validation = await validationResponse.json();
+    try {
+      const validation = await validateAccount(
+        data.email,
+        data.phoneNumber
+      );
     
-    if (!validation.canCreateAccount) {
-      setFormError("Unable to create your account. Please review your information or sign in if you already have an account.");
-      return;
-    }
-    
-    if (!validationResponse.ok) {
-      setFormError("An error occurred while validating your account. Please try again.");
+      if (!validation.canCreateAccount) {
+        setFormError(
+          "Unable to create your account. Please review your information or sign in if you already have an account."
+        );
+        return;
+      }
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred."
+      );
       return;
     }
 
@@ -191,6 +191,10 @@ export function OwnerSignupForm() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
+      {/* Back Button */}
+      <div className="w-full max-w-xl">
+        <BackButton href="/" />
+      </div>
       <div className="text-center mb-8 mt-0">
         <CubeGrabLogo />
       </div>
@@ -341,7 +345,7 @@ export function OwnerSignupForm() {
               {isSubmitting ? "Registering..." : "Complete Registration"}
             </Button>
           </form>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2.5">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2.5 text-center pt-2">
             Already have an account?{" "}
             <Link href="/owner-signin" className="text-[var(--color-accent-gold)] hover:underline">
               Sign in

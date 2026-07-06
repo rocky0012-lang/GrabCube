@@ -9,6 +9,8 @@ import PhoneInput from "react-phone-number-input"
 import "react-phone-number-input/style.css";
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
 import Link from "next/link"
+import { validateAccount } from "@/lib/api/account-validation"
+import { BackButton } from "../reusable/back-button"
 // Supabase client
 import { createClient } from "@/lib/supabase/client"
 
@@ -69,7 +71,6 @@ export function TenantSignupForm() {
   useEffect(() => {
         if (!formSuccess) return;
         
-  
         const { data: { subscription },
         } = supabase.auth.onAuthStateChange((event) => {
           if (event === 'SIGNED_IN') {
@@ -108,26 +109,24 @@ export function TenantSignupForm() {
   async function onSubmit(data: SignupValues) {
     setFormError(null)
 
-    const validationResponse = await fetch("/api/account/validate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-      }),
-    });
-
-    const validation = await validationResponse.json();
+    try {
+      const validation = await validateAccount(
+        data.email,
+        data.phoneNumber
+      );
     
-    if (!validation.canCreateAccount) {
-      setFormError("Unable to create your account. Please review your information or sign in if you already have an account.");
-      return;
-    }
-    
-    if (!validationResponse.ok) {
-      setFormError("An error occurred while validating your account. Please try again.");
+      if (!validation.canCreateAccount) {
+        setFormError(
+          "Unable to create your account. Please review your information or sign in if you already have an account."
+        );
+        return;
+      }
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred."
+      );
       return;
     }
     
@@ -198,15 +197,21 @@ export function TenantSignupForm() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
-    <div className="text-center mb-8 mt-0">
-      <CubeGrabLogo />
-    </div>
-    <div className="w-full max-w-xl mx-auto mb-6">
-      <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-2xl max-w-xl mx-auto">
-        Create a Tenant account
-      </p>
-      <h3>Find your perfect space</h3>
-    </div>
+
+      {/* Back Button */}
+      <div className="w-full max-w-xl">
+        <BackButton href="/" />
+      </div>
+
+      <div className="text-center mb-8 mt-0">
+        <CubeGrabLogo />
+      </div>
+      <div className="w-full max-w-xl mx-auto mb-6">
+        <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-2xl max-w-xl mx-auto">
+          Create a Tenant account
+        </p>
+        <h3>Find your perfect space</h3>
+      </div>
     <Card className="w-full max-w-xl mx-auto bg-[var(--color-bg-secondary-base)]/10 dark:bg-[var(--color-bg-primary-base)]/5 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl">
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -344,7 +349,7 @@ export function TenantSignupForm() {
             {isSubmitting ? "Registering..." : "Complete Registration"}
           </Button>
         </form>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2.5">
+        <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2.5 text-center pt-2">
           Already have an account?{" "}
           <Link href="/sign-in" className="text-[var(--color-accent-gold)] hover:underline">
             Sign in

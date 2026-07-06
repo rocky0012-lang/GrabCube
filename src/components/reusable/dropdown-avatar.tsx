@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HelpCircle, LayersTwo01, LogOut01, Moon01, Settings01, User01 } from "@untitledui/icons";
 import { Button as AriaButton, SubmenuTrigger } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
@@ -22,6 +22,10 @@ export const DropdownAvatar = () => {
     const isDark = mounted && resolvedTheme === "dark";
     const router = useRouter();
     const supabase = createClient();
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const handleLogout = async () => {
       const { error } = await supabase.auth.signOut();

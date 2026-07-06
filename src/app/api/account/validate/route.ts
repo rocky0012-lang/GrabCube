@@ -17,17 +17,37 @@ export async function POST(request: Request) {
       );
     }
 
-    const { data: emailUser } = await serviceRoleClient
+    const { data: emailUser, error: emailError } = await serviceRoleClient
         .from("users")
         .select("id")
         .eq("email", email)
         .maybeSingle();
 
-    const { data: phoneUser } = await serviceRoleClient
+    if (emailError) {
+      console.error("Error occurred while fetching email user:", emailError);
+      return NextResponse.json(
+        {
+          error: "Internal server error.",
+        },
+        { status: 500 }
+      );
+    }
+
+    const { data: phoneUser, error: phoneError } = await serviceRoleClient
         .from("users")
         .select("id")
         .eq("phone_number", phoneNumber)
         .maybeSingle();
+
+    if (phoneError) {
+      console.error("Error occurred while fetching phone user:", phoneError);
+      return NextResponse.json(
+        {
+          error: "Internal server error.",
+        },
+        { status: 500 }
+      );
+    }
     
     const canCreateAccount = !emailUser && !phoneUser;
 
