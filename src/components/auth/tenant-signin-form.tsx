@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation"
 import { CubeGrabLogo } from "@/components/reusable/cubegrab-logo"
 import SocialAuthButtons from "@/components/ui/social-auth-button"
 import Separator from "@/components/reusable/separator"
-import { Link } from "react-aria-components"
+import Link from "next/link"
 import { BackButton } from "../reusable/back-button"
 const signinSchema = z.object({
   email: z.string().email("Please input a valid email address."),
@@ -43,6 +43,7 @@ export function TenantSigninForm() {
 
             async function onSubmit(data: SigninValues) {
                  setFormError(null)
+                try {
                 const supabase = createClient()
                 const { error } = await supabase.auth.signInWithPassword({
                   email: data.email,
@@ -84,6 +85,9 @@ export function TenantSigninForm() {
 
                 // If the user is a tenant, redirect to the tenant dashboard
                 router.replace("/tenant/dashboard") // Redirect to tenant dashboard on successful sign-in
+              } catch {
+                setFormError("Something went wrong. Please try again.")
+              }
                 // Handle success (e.g., redirect)
               }
     return (

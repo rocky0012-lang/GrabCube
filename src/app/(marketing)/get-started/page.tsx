@@ -23,7 +23,7 @@ const roleOptions = [
 
 const GetStartedPage = () => {
   return (
-    <main className="min-h-screen px-6 py-8">
+    <main className="min-h-screen px-2 py-2">
       {/* Top Navigation */}
       <div className="mx-auto w-full max-w-3xl">
         <BackButton
@@ -34,11 +34,11 @@ const GetStartedPage = () => {
       </div>
       <div className="mt-6 flex flex-col items-center text-center">
         <CubeGrabLogo />
-        <div className="flex flex-col items-center justify-center gap-4 pt-8">
+        <div className="flex flex-col items-center justify-center gap-2 pt-2">
             <h1 className="text-2xl font-bold">How would you like to continue?</h1>
             <p className="text-lg text-[color:var(--color-text-secondary)]">Choose the option that best describes you</p>
         </div>
-        <div className="flex flex-col gap-12 w-full max-w-3xl mt-6">
+        <div className="flex flex-col gap-8 w-full max-w-3xl mt-2">
           {roleOptions.map((role) => (
             <RoleSelectionCard
               key={role.href}
