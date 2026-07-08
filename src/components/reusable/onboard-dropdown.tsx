@@ -38,13 +38,13 @@ function NavigationDropdown({ label, items }: NavigationDropdownProps) {
 }
 
 
-const productItems = [
+export const productItems = [
   {label: "Analytics", href: "/products/analytics"},
   {label: "Automation", href: "/products/automation"},
   {label: "Reports", href: "/products/reports"},
   {label: "Integrations", href: "/products/integrations"},
 ];
-const servicesItems = [
+export const servicesItems = [
   {label: "Web Development", href: "/services/web-development"},
   {label: "UI/UX Design", href: "/services/ui-ux-design"},
   {label: "Consulting", href: "/services/consulting"},

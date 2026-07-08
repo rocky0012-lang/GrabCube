@@ -14,23 +14,21 @@ export const ContactSimpleForm = () => {
     const [selectedCountryPhone, setSelectedCountryPhone] = useState("US");
 
     return (
-        <section className="py-16 md:py-24">
-            <span className="flex text-sm font-semibold md:text-md items-center mb-12 justify-center">Contact us</span>
-            <div className="flex  mx-auto max-w-container px-4 md:px-8">
-                <div className="mx-auto flex w-full max-w-3xl flex-col items-center mt-2 justify-center">
-                    <h2 className="mt-3 text-display-md font-semibold md:text-display-lg">Get in touch</h2>
-                    <p className="mt-4 text-lg text-tertiary md:mt-6 md:text-xl">We'd love to hear from you. Please fill out this form.</p>
+        <section className="py-12 sm:py-16 lg:py-24">
+            <div className="mx-auto flex w-full max-w-container flex-col gap-10 px-4 sm:px-6 lg:flex-row lg:items-start lg:gap-20 lg:px-8">
+                <div className="flex w-full flex-1 flex-col items-center text-center lg:items-start lg:text-left">
+                    <span className="text-sm font-semibold md:text-md">Contact us</span>
+                    <h2 className="mt-3 text-3xl font-semibold sm:text-4xl md:text-display-lg">Get in touch</h2>
+                    <p className="mt-4 max-w-xl text-base text-tertiary sm:text-lg md:mt-6 md:text-xl">
+                        We&apos;d love to hear from you. Please fill out this form.
+                    </p>
                 </div>
 
                 <Form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        const data = Object.fromEntries(new FormData(e.currentTarget));
-                    }}
-                    className="mx-auto mt-16 flex flex-col gap-8 md:mt-24 md:max-w-120"
+                    className="flex w-full flex-1 flex-col gap-8 lg:max-w-xl"
                 >
                     <div className="flex flex-col gap-6">
-                        <div className="flex flex-col gap-x-8 gap-y-6 md:flex-row">
+                        <div className="flex flex-col gap-6 sm:flex-row sm:gap-8">
                             <Input isRequired size="lg" name="firstName" label="First name" placeholder="First name" wrapperClassName="flex-1" />
                             <Input isRequired size="lg" name="lastName" label="Last name" placeholder="Last name" wrapperClassName="flex-1" />
                         </div>
@@ -42,8 +40,10 @@ export const ContactSimpleForm = () => {
                             leadingAddon={
                                 <NativeSelect
                                     aria-label="Country code"
+                                    className="shrink-0"
                                     value={selectedCountryPhone}
                                     onChange={(value) => setSelectedCountryPhone(value.currentTarget.value)}
+                                    selectClassName="w-28 sm:w-32"
                                     options={phoneCodeOptions.map((item) => ({
                                         label: item.label as string,
                                         value: item.id as string,
@@ -74,7 +74,7 @@ export const ContactSimpleForm = () => {
                         />
                     </div>
 
-                    <Button type="submit" size="xl">
+                    <Button type="submit" size="xl" className="w-full md:w-auto">
                         Send message
                     </Button>
                 </Form>

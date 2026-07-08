@@ -209,3 +209,19 @@
     @apply font-sans;
   }
 }
+
+.PhoneInputCountrySelect {
+  background-color: var(--color-bg-secondary-base);
+  color: var(--color-text-primary);
+  color-scheme: dark;
+}
+
+.PhoneInputCountrySelect option {
+  background-color: var(--color-bg-secondary-base);
+  color: var(--color-text-primary);
+}
+
+.PhoneInputCountrySelect optgroup {
+  background-color: var(--color-bg-secondary-base);
+  color: var(--color-text-primary);
+}

@@ -28,30 +28,37 @@ const ForgotPasswordForm = () => {
         } = useForm<ForgotPasswordFormValues>({
             resolver: zodResolver(
                 z.object({
-                    email: z.string().email("Please input a valid email address."),
+                    email: z.email({ error: "Please input a valid email address." }),
                 })
             ),
         });
 
         const supabase = createClient();
+        const [resetEmailSent, setResetEmailSent] = React.useState(false);
 
         const onSubmit = async (data: ForgotPasswordFormValues) => {
            setFormError(null)
-          const { error } = await supabase.auth.resetPasswordForEmail(
-            data.email,
-            {
-              redirectTo: `${window.location.origin}/reset-password`,
+            setResetEmailSent(false)
+            try {
+              const { error } = await supabase.auth.resetPasswordForEmail(
+                data.email,
+                {
+                  redirectTo: `${window.location.origin}/reset-password`,
+                }
+              );
+              if (error) {
+                setFormError(error.message)
+              } else {
+                setResetEmailSent(true)
+              }
+            } catch {
+              setFormError("Something went wrong. Please try again.")
             }
-          );
-      
-          if (error) {
-             setFormError(error.message)
-          }
         };
 
 
   return (
-    <main className="flex h-screen w-full flex-col items-center justify-center gap-4">
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
         <form onSubmit={handleSubmit(onSubmit)} className="flex w-full max-w-md flex-col gap-4 items-center">
             <div className="inline-flex items-center justify-center w-12 h-12 border border-[var(--color-accent-gold)] rounded-xl mb-6">
               <KeyRound className="w-6 h-6 text-[var(--color-accent-gold)]" />
@@ -77,9 +84,13 @@ const ForgotPasswordForm = () => {
             </div> 
             <Button type="submit" disabled={isSubmitting} className="w-full h-8 bg-[var(--color-accent-gold)] hover:bg-[var(--color-accent-gold-dark)] text-black text-lg mt-2"> 
                 {isSubmitting ? "Sending..." : "Send Reset Link"} </Button> 
-                {formError && (
-                  <p role="alert" aria-live="assertive" className="mt-2 text-sm text-destructive">
-                    {formError}
+                {!formError && resetEmailSent && (
+                  <p
+                    role="status"
+                    aria-live="polite"
+                    className="mt-2 text-sm text-green-600"
+                  >
+                    If an account exists for this email address, you'll receive a password reset link shortly.
                   </p>
                 )}
                 <div className="flex justify-center w-full mt-2">
@@ -89,7 +100,7 @@ const ForgotPasswordForm = () => {
                       />
                 </div>
         </form>
-    </main>
+    </div>
   )
 }
 

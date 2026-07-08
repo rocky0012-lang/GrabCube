@@ -26,14 +26,21 @@ export async function validateAccount(
     );
   }
 
-  const data: AccountValidationResponse = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      data.error ??
+  let data: AccountValidationResponse;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error(
         "An error occurred while validating your account. Please try again."
-    );
-  }
-
-  return data;
+      );
+    }
+  
+    if (!response.ok) {
+      throw new Error(
+        data.error ??
+          "An error occurred while validating your account. Please try again."
+      );
+    }
+  
+    return data;
 }

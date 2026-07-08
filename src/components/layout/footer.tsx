@@ -99,14 +99,14 @@ const footerNavList = [
 
 export const FooterLarge01 = () => {
     return (
-        <footer className="py-12 md:pt-16">
-            <div className="mx-auto max-w-container flex gap-4 px-4 md:px-8">
-                <div className="flex-1 flex flex-col items-start gap-4">
+        <footer className="py-12 sm:py-16">
+            <div className="mx-auto flex max-w-container flex-col gap-10 px-4 sm:px-6 lg:flex-row lg:items-start lg:gap-12 lg:px-8">
+                <div className="flex w-full flex-col items-start gap-4 lg:max-w-56">
                     <h2 className="text-lg font-bold --color-text-primary">CubeGrab</h2>
                     <p className="text-sm text-quaternary">© 2026 CubeGrab. All rights reserved.</p>
                 </div>
-                <nav className="flex-1" aria-label="Footer Navigation">
-                    <ul className="grid grid-cols-2 gap-12 md:grid-cols-3 lg:grid-cols-4">
+                <nav className="w-full flex-1" aria-label="Footer Navigation">
+                    <ul className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
                         {footerNavList.map((category) => (
                             <li key={category.label}>
                                 <h4 className="text-sm font-bold --color-text-primary">{category.label}</h4>
@@ -123,8 +123,8 @@ export const FooterLarge01 = () => {
                         ))}
                     </ul>
                 </nav>
-                <div className="flex flex-col items-center gap-4">
-                    <h3 className="text-sm font-bold pb-0 text-center --color-text-primary">Follow Us</h3>
+                <div className="flex w-full flex-col items-start gap-4 lg:w-auto lg:items-center">
+                    <h3 className="pb-0 text-sm font-bold text-center --color-text-primary">Follow Us</h3>
                     <div className="flex gap-4">
                         <FaInstagram className="h-5 w-5" />
                         <FaFacebook className="h-5 w-5" />
