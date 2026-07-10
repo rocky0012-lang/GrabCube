@@ -196,17 +196,20 @@ export function TenantSignupForm() {
     }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center py-6 px-2">
+    <main className="min-h-screen flex flex-col items-center justify-center py-2">
       {/* Back Button */}
       <div className="w-full max-w-xl">
         <BackButton href="/" />
       </div>
 
-      <div className="text-center mb-8 mt-0">
-        <CubeGrabLogo />
+      <div className="text-center mb-4">
+        <CubeGrabLogo 
+          width={150}
+          height={150}
+        />
       </div>
       <div className="w-full max-w-xl mx-auto mb-6">
-        <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-2xl max-w-xl mx-auto">
+        <p className="text-zinc-600 dark:text-zinc-400 mb-2 text-2xl max-w-xl mx-auto">
           Create a Tenant account
         </p>
         <h3>Find your perfect space</h3>

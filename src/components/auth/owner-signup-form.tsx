@@ -145,8 +145,11 @@ export function OwnerSignupForm() {
 
   if (formSuccess) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
-        <CubeGrabLogo />
+      <main className="min-h-screen flex flex-col items-center justify-center py-8 px-4">
+        <CubeGrabLogo 
+          width={150}
+          height={150}
+        />
         <Card className="w-full max-w-xl mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl">Check your email</CardTitle>
@@ -190,13 +193,16 @@ export function OwnerSignupForm() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
+    <main className="min-h-screen flex flex-col items-center justify-center py-2 px-4">
       {/* Back Button */}
       <div className="w-full max-w-xl">
         <BackButton href="/" />
       </div>
       <div className="text-center mb-8 mt-0">
-        <CubeGrabLogo />
+        <CubeGrabLogo 
+          width={208}
+          height={208}
+        />
       </div>
       <div className="w-full max-w-xl mx-auto mb-6">
         <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-2xl max-w-xl mx-auto">

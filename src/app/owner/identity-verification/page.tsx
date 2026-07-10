@@ -1,6 +1,7 @@
 import { CubeGrabLogo } from '@/components/reusable/cubegrab-logo'
 import { Input } from "@/components/ui/input"
 import { IdCard } from 'lucide-react';
+import CaptureIdCard from '@/components/reusable/capture-id-card';
 
 import {
   Card,
@@ -12,13 +13,16 @@ import {
 
 const IdentityVerification = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-        <CubeGrabLogo />
-        <div>
-           <h1 className="text-3xl font-bold mb-4">Verify your identity</h1>
-           <p className="text-lg mb-6">We need to verify your identity to keep our platform safe and secure</p>
+    <main className=" flex flex-col items-center justify-center py-6 px-2">
+        <CubeGrabLogo 
+          width={150}
+          height={150}
+        />
+        <div className="flex flex-col items-start justify-center px-2">
+           <h1 className="text-2xl font-bold">Verify your identity</h1>
+           <p className=" mb-2">We need to verify your identity to keep our platform safe and secure</p>
         </div>
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md mt-2">
           <CardHeader>
             <CardTitle className="text-lg text-[#a0a0a0] font-bold">National ID / Passport Number</CardTitle>
             <CardDescription>Enter your national ID or passport number</CardDescription>
@@ -38,8 +42,24 @@ const IdentityVerification = () => {
             </div>
           </CardContent>
         </Card>
-    
-      
+        <div className="flex flex-col items-start justify-center py-6 px-2">
+          <div className="flex flex-col items-start justify-center">
+            <h2 className="text-2xl font-bold pt-2.5">ID Document Camera Upload</h2>
+            <p className=" mb-4">capture clear images of the front and back of your valid ID</p>
+          </div>
+          <div className="flex flex-col gap-6 w-full md:flex-row items-center justify-center">
+          <CaptureIdCard 
+            title="Front of ID" 
+            description="Tap to capture or upload" 
+            icon={IdCard} 
+          />
+          <CaptureIdCard 
+            title="Back of ID" 
+            description="Tap to capture or upload" 
+            icon={IdCard} 
+          />
+          </div>
+        </div>
     </main>
   )
 }

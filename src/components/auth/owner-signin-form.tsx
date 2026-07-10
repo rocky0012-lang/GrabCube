@@ -92,7 +92,10 @@ export function OwnerSigninForm() {
             <BackButton href="/" />
           </div>
           <div className="text-center mb-8">
-            <CubeGrabLogo />
+            <CubeGrabLogo 
+              width={208}
+              height={208}
+            />
           </div>
           <div className="w-full max-w-xl mx-auto mb-6 px-4">
           <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-2xl max-w-xl mx-auto">
