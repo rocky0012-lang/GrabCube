@@ -1,13 +1,19 @@
 import Image from "next/image"
 
-export const CubeGrabLogo = () => {
+interface CubeGrabLogoProps {
+    width?: number;
+    height?: number;
+    alt?: string;
+}
+
+export const CubeGrabLogo = ({ width, height, alt }: CubeGrabLogoProps) => {
     return (
         <Image
             src="/images/CubeGrab.png"
-            alt="CubeGrab Logo"
-            width={208}
-            height={208}
-            className="mx-auto mb-6"
+            alt={alt || "CubeGrab Logo"}
+            height={height}
+            width={width}
+            className="mx-auto mb-4"
         />
     )
 }
