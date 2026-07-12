@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from "react"
 import { CubeGrabLogo } from '@/components/reusable/cubegrab-logo'
 import { Input } from "@/components/ui/input"
 import { IdCard } from 'lucide-react';
@@ -12,6 +15,8 @@ import {
 } from "@/components/ui/card"
 
 const IdentityVerification = () => {
+  const [ frontId, setFrontId ] = useState<File | null>(null);
+  const [ backId, setBackId ] = useState<File | null>(null);
   return (
     <main className=" flex flex-col items-center justify-center py-6 px-2">
         <CubeGrabLogo 
@@ -45,19 +50,23 @@ const IdentityVerification = () => {
         <div className="flex flex-col items-start justify-center py-6 px-2">
           <div className="flex flex-col items-start justify-center">
             <h2 className="text-2xl font-bold pt-2.5">ID Document Camera Upload</h2>
-            <p className=" mb-4">capture clear images of the front and back of your valid ID</p>
+            <p className=" mb-4">Capture clear images of the front and back of your valid ID</p>
           </div>
           <div className="flex flex-col gap-6 w-full md:flex-row items-center justify-center">
           <CaptureIdCard 
             title="Front of ID" 
-            description="Tap to capture or upload" 
-            icon={IdCard} 
+            description="Tap to capture or upload"
+            onImageSelected={(file) => setFrontId(file)} 
           />
           <CaptureIdCard 
             title="Back of ID" 
             description="Tap to capture or upload" 
-            icon={IdCard} 
+            onImageSelected={(file) => setBackId(file)}
           />
+          </div>
+          <div className="text-sm text-muted-foreground">
+            <p>Front: {frontId?.name ?? "Not selected"}</p>
+            <p>Back: {backId?.name ?? "Not selected"}</p>
           </div>
         </div>
     </main>

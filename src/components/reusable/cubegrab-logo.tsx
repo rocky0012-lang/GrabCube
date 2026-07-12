@@ -1,8 +1,8 @@
 import Image from "next/image"
 
 interface CubeGrabLogoProps {
-    width?: number;
-    height?: number;
+    width: number;
+    height: number;
     alt?: string;
 }
 
