@@ -1,6 +1,5 @@
 import { DropdownAccountCardSM } from "@/components/reusable/account-card"
-import LogoutButton from "@/components/reusable/logoutbutton"
-
+import LogoutDialog from "@/components/reusable/logout-dialog";
 
 const TenantDashboard = () => {
   return (
@@ -10,8 +9,12 @@ const TenantDashboard = () => {
         <p>Hi, welcome to your dashboard!</p>
       
       
-        <LogoutButton />
-        <DropdownAccountCardSM />
+        <LogoutDialog
+          redirectTo="/sign-in" 
+        />
+        <DropdownAccountCardSM 
+          redirectTo="/sign-in"
+        />
       
     </div>
   )

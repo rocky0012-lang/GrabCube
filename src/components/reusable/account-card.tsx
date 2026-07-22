@@ -7,114 +7,141 @@ import { Button as AriaButton, SubmenuTrigger } from "react-aria-components";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { cx } from "@/lib/utils/cx";
-import { Button } from "@/components/base/buttons/button";
 import { useProfile } from "@/hooks/use-profile";
 import { useTheme } from "next-themes";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useLogout } from "@/components/reusable/logout-action";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
-export const DropdownAccountCardSM = () => {
+interface DropdownAccountCardSMProps {
+    redirectTo: string;
+}
+
+export const DropdownAccountCardSM = ({ redirectTo }: DropdownAccountCardSMProps) => {
     const { profile, loading } = useProfile();
+    const logout = useLogout(redirectTo);
 
     const [selectedAccount, setSelectedAccount] = useState<Selection>(new Set(["olivia"]));
     const { resolvedTheme, setTheme } = useTheme();
     const [ mounted, setMounted ] = useState(true);
     const isDark = mounted && resolvedTheme === "dark";
-    const supabase = createClient();
-    const router = useRouter();
+    const [openLogOutDialog, setOpenLogOutDialog] = useState(false);
 
-
-    const handleLogout = async () => {
-      const { error } = await supabase.auth.signOut();
-
-      if (error) {
-        console.error("Logout failed:", error);
-        return;
-      }
-
-      router.replace("/signin");
-      router.refresh();
-    };
 
     return (
-        <Dropdown.Root>
-            <AriaButton
-                className={({ isPressed, isFocused }) =>
-                    cx(
-                        "relative flex w-46 cursor-pointer items-center gap-2 rounded-lg p-1.5 text-left inset-ring-1 inset-ring-border-secondary outline-offset-2 ring-[var(--color-accent-gold)]",
-                        (isPressed || isFocused) && "outline-2",
-                    )
-                }
+        <>
+            <Dropdown.Root>
+                <AriaButton
+                    className={({ isPressed, isFocused }) =>
+                        cx(
+                            "relative flex w-46 cursor-pointer items-center gap-2 rounded-lg p-1.5 text-left inset-ring-1 inset-ring-border-secondary outline-offset-2 ring-[var(--color-accent-gold)]",
+                            (isPressed || isFocused) && "outline-2",
+                        )
+                    }
+                >
+                    <Avatar border size="sm" src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" status="online" />
+                
+                    <p className="text-sm font-semibold ">{loading ? "Loading..." : profile?.full_name}</p>
+                
+                    <div className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-md">
+                        <ChevronDown className="size-4 shrink-0 stroke-[2.25px]" />
+                    </div>
+                </AriaButton>
+                
+                <Dropdown.Popover className="w-60">
+                    <div className="flex flex-col border-b border-secondary px-4 py-3">
+                        <p className="text-sm font-semibold text-primary">PRO account</p>
+                        <p className="text-sm text-tertiary">{loading ? "" : profile?.email}</p>
+                    </div>
+                    <Dropdown.Menu>
+                        <Dropdown.Item icon={User01}>
+                            View profile
+                        </Dropdown.Item>
+                        <Dropdown.Item icon={Settings01} href="/settings">
+                            Settings
+                        </Dropdown.Item>
+                        <Dropdown.Section selectionMode="single" selectedKeys={new Set([isDark ? "dark-mode" : "light-mode"])}>
+                            {mounted && (<Dropdown.Item id="dark-mode" icon={Moon01} selectionIndicator="toggle" onAction={() => setTheme(isDark ? "light" : "dark")}>
+                                {isDark ? "Light mode" : "Dark mode"}
+                            </Dropdown.Item>)}
+                        </Dropdown.Section>
+                
+                        <SubmenuTrigger>
+                            <Dropdown.Item icon={HelpCircle}>Support</Dropdown.Item>
+                
+                            <Dropdown.Popover placement="right top" offset={-6}>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item>Help center</Dropdown.Item>
+                                    <Dropdown.Item>Contact support</Dropdown.Item>
+                                    <Dropdown.Item>Send feedback</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </SubmenuTrigger>
+                
+                        <Dropdown.Separator />
+                
+                        <Dropdown.Section selectionMode="single" selectedKeys={selectedAccount} onSelectionChange={setSelectedAccount}>
+                            <Dropdown.SectionHeader className="px-4 pt-1.5 pb-0.5 text-xs font-semibold text-brand-secondary">
+                                Switch Account
+                            </Dropdown.SectionHeader>
+                
+                            <Dropdown.Item id="olivia" avatarUrl="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" selectionIndicator="radio">
+                                {loading ? "Loading..." : profile?.full_name}
+                            </Dropdown.Item>
+                            <Dropdown.Item id="sienna" avatarUrl="https://www.untitledui.com/images/avatars/sienna-hewitt?fm=webp&q=80" selectionIndicator="radio">
+                                Sienna Hewitt
+                            </Dropdown.Item>
+                        </Dropdown.Section>
+                
+                        <Dropdown.Item icon={Plus}>Add account</Dropdown.Item>
+                
+                        <Dropdown.Separator />
+                
+                        
+                    </Dropdown.Menu>
+                    <Dropdown.Item 
+                        icon={LogOut01}
+                        className="text-red-500"
+                        onAction={() => setOpenLogOutDialog(true)}
+                    >
+                        Sign out
+                    </Dropdown.Item>
+                    <div className="flex justify-between border-t border-secondary px-4 py-3">
+                        <span className="truncate text-sm text-quaternary">&copy; CubeGrab Inc</span>
+                        <span className="text-sm text-quaternary">2026</span>
+                    </div>
+                </Dropdown.Popover>
+            </Dropdown.Root>
+
+            <AlertDialog
+                open={openLogOutDialog}
+                onOpenChange={setOpenLogOutDialog}
             >
-                <Avatar border size="sm" src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" status="online" />
-
-                <p className="text-sm font-semibold ">{loading ? "Loading..." : profile?.full_name}</p>
-
-                <div className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-md">
-                    <ChevronDown className="size-4 shrink-0 stroke-[2.25px]" />
-                </div>
-            </AriaButton>
-
-            <Dropdown.Popover className="w-60">
-                <div className="flex flex-col border-b border-secondary px-4 py-3">
-                    <p className="text-sm font-semibold text-primary">PRO account</p>
-                    <p className="text-sm text-tertiary">{loading ? "" : profile?.email}</p>
-                </div>
-                <Dropdown.Menu>
-                    <Dropdown.Item icon={User01}>
-                        View profile
-                    </Dropdown.Item>
-                    <Dropdown.Item icon={Settings01} href="/settings">
-                        Settings
-                    </Dropdown.Item>
-                    <Dropdown.Section selectionMode="single" selectedKeys={new Set([isDark ? "dark-mode" : "light-mode"])}>
-                        {mounted && (<Dropdown.Item id="dark-mode" icon={Moon01} selectionIndicator="toggle" onAction={() => setTheme(isDark ? "light" : "dark")}>
-                            {isDark ? "Light mode" : "Dark mode"}
-                        </Dropdown.Item>)}
-                    </Dropdown.Section>
-
-                    <SubmenuTrigger>
-                        <Dropdown.Item icon={HelpCircle}>Support</Dropdown.Item>
-
-                        <Dropdown.Popover placement="right top" offset={-6}>
-                            <Dropdown.Menu>
-                                <Dropdown.Item>Help center</Dropdown.Item>
-                                <Dropdown.Item>Contact support</Dropdown.Item>
-                                <Dropdown.Item>Send feedback</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown.Popover>
-                    </SubmenuTrigger>
-
-                    <Dropdown.Separator />
-
-                    <Dropdown.Section selectionMode="single" selectedKeys={selectedAccount} onSelectionChange={setSelectedAccount}>
-                        <Dropdown.SectionHeader className="px-4 pt-1.5 pb-0.5 text-xs font-semibold text-brand-secondary">
-                            Switch Account
-                        </Dropdown.SectionHeader>
-
-                        <Dropdown.Item id="olivia" avatarUrl="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80" selectionIndicator="radio">
-                            {loading ? "Loading..." : profile?.full_name}
-                        </Dropdown.Item>
-                        <Dropdown.Item id="sienna" avatarUrl="https://www.untitledui.com/images/avatars/sienna-hewitt?fm=webp&q=80" selectionIndicator="radio">
-                            Sienna Hewitt
-                        </Dropdown.Item>
-                    </Dropdown.Section>
-
-                    <Dropdown.Item icon={Plus}>Add account</Dropdown.Item>
-
-                    <Dropdown.Separator />
-
-                    
-                </Dropdown.Menu>
-                <Button size="xs" color="secondary-destructive" iconLeading={LogOut01} className="text-center hover:bg-red-500 hover:text-white transition-colors" onClick={handleLogout} >
-                                        Sign out
-                </Button>
-                <div className="flex justify-between border-t border-secondary px-4 py-3">
-                    <span className="truncate text-sm text-quaternary">&copy; CubeGrab Inc</span>
-                    <span className="text-sm text-quaternary">2026</span>
-                </div>
-            </Dropdown.Popover>
-        </Dropdown.Root>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to sign out of your CubeGrab account?
+                            You'll need to sign in to continue.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={logout} 
+                            className="bg-red-700 text-white hover:bg-red-800">Sign Out</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 };

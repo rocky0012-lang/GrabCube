@@ -225,3 +225,48 @@
   background-color: var(--color-bg-secondary-base);
   color: var(--color-text-primary);
 }
+
+@keyframes orbit-cw {
+  0% {
+    transform: rotate(-90deg);
+  }
+
+  100% {
+    transform: rotate(90deg);
+  }
+}
+
+@keyframes orbit-ccw {
+  0% {
+    transform: rotate(90deg);
+  }
+
+  100% {
+    transform: rotate(-90deg);
+  }
+}
+
+
+@keyframes scan-line {
+  0% {
+    top:15%;
+    opacity:0;
+  }
+
+  15% {
+    opacity:1;
+  }
+
+  85% {
+    opacity:1;
+  }
+
+  100% {
+    top:85%;
+    opacity:0;
+  }
+}
+
+.animate-scan-line {
+  animation: scan-line 3s ease-in-out infinite;
+}

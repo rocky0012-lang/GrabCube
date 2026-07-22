@@ -4,8 +4,7 @@ import { useState } from "react"
 import { CubeGrabLogo } from '@/components/reusable/cubegrab-logo'
 import { Input } from "@/components/ui/input"
 import { IdCard } from 'lucide-react';
-import CaptureIdCard from '@/components/reusable/capture-id-card';
-
+import CaptureIdCard from "@/components/reusable/capture-id-card"
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import LiveSelfieCard from "@/components/reusable/live-selfie-card";
 
 const IdentityVerification = () => {
   const [ frontId, setFrontId ] = useState<File | null>(null);
@@ -69,6 +69,7 @@ const IdentityVerification = () => {
             <p>Back: {backId?.name ?? "Not selected"}</p>
           </div>
         </div>
+        <LiveSelfieCard />
     </main>
   )
 }

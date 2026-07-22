@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Camera, IdCard } from "lucide-react"
 
 import {
@@ -21,6 +21,16 @@ const CaptureIdCard = ({ title, description, onImageSelected }: CaptureIdCardPro
   const [ error, setError ] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [ preview, setPreview ] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Cleanup the object URL when the component unmounts or when a new file is selected
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+    }, [preview]);
+
     const handleClick = () => {
       fileInputRef.current?.click();
     };
@@ -31,14 +41,8 @@ const CaptureIdCard = ({ title, description, onImageSelected }: CaptureIdCardPro
       if (!file) 
         return;
       
-      const imageUrl = URL.createObjectURL(file);
-      console.log(imageUrl);
-      
-      setPreview(imageUrl);
-      
-      onImageSelected?.(file);
-      
-      event.target.value = ''; // Reset the input value to allow re-uploading the same file
+      setError(null); // Clear any previous error
+
       const allowedTypes = [
         "image/jpeg",
         "image/png",
@@ -55,6 +59,11 @@ const CaptureIdCard = ({ title, description, onImageSelected }: CaptureIdCardPro
         setError("File size exceeds the 5MB limit. Please select a smaller file.");
         return;
       }
+
+      const imageUrl = URL.createObjectURL(file);
+      setPreview(imageUrl);
+      onImageSelected?.(file);
+      event.target.value = ''; // Reset the input value to allow re-selection of the same file
     }
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
