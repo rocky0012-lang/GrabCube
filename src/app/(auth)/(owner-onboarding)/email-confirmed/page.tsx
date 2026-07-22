@@ -12,7 +12,10 @@ export default function EmailConfirmedPage() {
   return (
     <main className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-xl space-y-6">
-        <CubeGrabLogo />
+        <CubeGrabLogo 
+          width={150}
+          height={150}
+        />
 
         <Card>
           <CardHeader className="text-center">

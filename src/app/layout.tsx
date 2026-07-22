@@ -3,6 +3,7 @@ import { Mona_Sans } from "next/font/google";
 import "./globals.css";
 import { RouteProvider } from "@/providers/route-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const monaSans = Mona_Sans({
   variable: "--font-mona-sans",
@@ -24,6 +25,7 @@ export default function RootLayout({
     lang="en" 
     className={`${monaSans.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col text-foreground">
+        <Toaster richColors position="top-right" toastOptions={{className:"border border-var[var(--color-accent-gold)] bg-[var(--color-background)] text-foreground",}} />
         <ThemeProvider>
           <RouteProvider>
             {children}
